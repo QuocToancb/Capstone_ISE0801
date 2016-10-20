@@ -82,13 +82,14 @@ CREATE TABLE Member_request
 	account_id int NOT NULL,
 	type tinyint NOT NULL,
 	dob_id int NOT NULL,
+	reason nvarchar,
 	status tinyint NOT NULL,
 	sent_time Double precision NOT NULL,
 	CONSTRAINT PK_Member_request PRIMARY KEY (m_request_id),
 	CONSTRAINT FK_Member_request_account FOREIGN KEY (account_id) REFERENCES Account(account_id),
 	CONSTRAINT FK_Member_request_target FOREIGN KEY (dob_id) REFERENCES Displayed_object(dob_id)
 )
-
+ 
 -- Insert:
 INSERT INTO Museum (name, house_no, street, city, phone_no, website)
 VALUES (N'Bảo tàng 10 năm FE FPT', N'Thạch Hòa', N'Thạch Thất', N'Hà Nội','0473001866','daihoc.fpt.edu.vn');
