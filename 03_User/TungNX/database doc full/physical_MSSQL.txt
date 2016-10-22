@@ -1,0 +1,137 @@
+
+/*==============================================================*/
+/* Table: ACCOUNT                                               */
+/*==============================================================*/
+create table ACCOUNT (
+   ACCOUNT_ID           int                  not null,
+   EMAIL                varchar(50)          not null,
+   PASSWORD             varchar(16)          not null,
+   PERMISSION           int                  not null,
+   STATUS               int                  not null,
+   CREATED_TIME         datetime             not null,
+   TOKEN                text                 null,
+   constraint PK_ACCOUNT primary key nonclustered (ACCOUNT_ID)
+)
+go
+
+/*==============================================================*/
+/* Table: DISPAYED_OBJECT                                       */
+/*==============================================================*/
+create table DISPAYED_OBJECT (
+   DO_ID                int                  not null,
+   MUSEUM_ID            int                  not null,
+   TARGET_ID            int                  not null,
+   NAME                 varchar(150)         not null,
+   TEXT_DESCRIPTION     text                 null,
+   IMAGE                text                 null,
+   AUDIO                text                 null,
+   VIDEO                text                 null,
+   MODEL                text                 null,
+   LAST_STATUS          int                  null,
+   CURRENT_STATUS       int                  not null,
+   constraint PK_DISPAYED_OBJECT primary key nonclustered (DO_ID)
+)
+go
+
+/*==============================================================*/
+/* Index: HAS_FK                                                */
+/*==============================================================*/
+create index HAS_FK on DISPAYED_OBJECT (
+MUSEUM_ID ASC
+)
+go
+
+/*==============================================================*/
+/* Index: HAS_1_FK                                              */
+/*==============================================================*/
+create index HAS_1_FK on DISPAYED_OBJECT (
+TARGET_ID ASC
+)
+go
+
+/*==============================================================*/
+/* Table: GUEST_REQUEST                                         */
+/*==============================================================*/
+create table GUEST_REQUEST (
+   G_REQUEST_ID         int                  not null,
+   EMAIL                varchar(50)          not null,
+   PASSWORD             varchar(16)          not null,
+   MUSEUM_NAME          varchar(150)         not null,
+   HOUSE_NO             varchar(30)          not null,
+   STREET               varchar(30)          not null,
+   CITY                 varchar(30)          not null,
+   PHONE_NO             varchar(20)          not null,
+   WEBSITE              varchar(50)          not null,
+   STATUS               int                  not null,
+   constraint PK_GUEST_REQUEST primary key nonclustered (G_REQUEST_ID)
+)
+go
+
+/*==============================================================*/
+/* Table: MUSEUM                                                */
+/*==============================================================*/
+create table MUSEUM (
+   MUSEUM_ID            int                  not null,
+   ACCOUNT_ID           int                  not null,
+   MUSEUM_NAME          varchar(150)         not null,
+   HOUSE_NO             varchar(30)          not null,
+   STREET               varchar(30)          not null,
+   CITY                 varchar(30)          not null,
+   PHONE_NO             varchar(20)          not null,
+   WEBSITE              varchar(50)          not null,
+   constraint PK_MUSEUM primary key nonclustered (MUSEUM_ID)
+)
+go
+
+/*==============================================================*/
+/* Index: MANAGES_FK                                            */
+/*==============================================================*/
+create index MANAGES_FK on MUSEUM (
+ACCOUNT_ID ASC
+)
+go
+
+/*==============================================================*/
+/* Table: MUSEUM_REQUEST                                        */
+/*==============================================================*/
+create table MUSEUM_REQUEST (
+   M_REQUEST_ID         int                  not null,
+   MUSEUM_ID            int                  not null,
+   DO_ID                int                  not null,
+   REASON               text                 null,
+   REQUEST_TYPE         int                  not null,
+   REQUEST_STATUS       int                  not null,
+   SENT_TIME            datetime             not null,
+   RESPONDED_TIME       datetime             null,
+   constraint PK_MUSEUM_REQUEST primary key nonclustered (M_REQUEST_ID)
+)
+go
+
+/*==============================================================*/
+/* Index: CREATES_FK                                            */
+/*==============================================================*/
+create index CREATES_FK on MUSEUM_REQUEST (
+MUSEUM_ID ASC
+)
+go
+
+/*==============================================================*/
+/* Index: HAS_2_FK                                              */
+/*==============================================================*/
+create index HAS_2_FK on MUSEUM_REQUEST (
+DO_ID ASC
+)
+go
+
+/*==============================================================*/
+/* Table: TARGET_OBJECT                                         */
+/*==============================================================*/
+create table TARGET_OBJECT (
+   TARGET_ID            int                  not null,
+   TARGET_NAME          varchar(30)          not null,
+   TARGET_IMAGE         text                 null,
+   SCANED_OBJECT        text                 null,
+   METADATA             text                 null,
+   constraint PK_TARGET_OBJECT primary key nonclustered (TARGET_ID)
+)
+go
