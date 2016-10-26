@@ -1,0 +1,236 @@
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-10-28 12:00:16
+         compiled from "application\views\templates\diemdanh\diemdanh.html" */ ?>
+<?php /*%%SmartyHeaderCode:1182355c796f8eba469-53483262%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+$_valid = $_smarty_tpl->decodeProperties(array (
+  'file_dependency' => 
+  array (
+    'd0214228b05fccc1d33bd775f50a2f11f8d5abaa' => 
+    array (
+      0 => 'application\\views\\templates\\diemdanh\\diemdanh.html',
+      1 => 1445345178,
+      2 => 'file',
+    ),
+  ),
+  'nocache_hash' => '1182355c796f8eba469-53483262',
+  'function' => 
+  array (
+  ),
+  'version' => 'Smarty-3.1.21-dev',
+  'unifunc' => 'content_55c796f90db830_69256416',
+  'variables' => 
+  array (
+    'url' => 0,
+    'lophoc' => 0,
+    'tiethoc' => 0,
+    'diemdanh' => 0,
+    'i' => 0,
+    'allhocsinh' => 0,
+    'hocsinhdanopbai1' => 0,
+    'value' => 0,
+    'hocsinhdanopbai2' => 0,
+    'nguoidiemdanh' => 0,
+  ),
+  'has_nocache_code' => false,
+),false); /*/%%SmartyHeaderCode%%*/?>
+<?php if ($_valid && !is_callable('content_55c796f90db830_69256416')) {function content_55c796f90db830_69256416($_smarty_tpl) {?><form method="post" enctype="multipart/form-data" class="form-horizontal" action="">
+<div class="panel-body">
+					<center> 
+                        <p><img src="<?php echo $_smarty_tpl->tpl_vars['url']->value;?>
+resource/images/attendance.png" width="75" height="76" /></p>
+                        <h3><strong>Điểm danh</strong></h3>
+                    </center>
+             		<br>
+             		<br>
+					<div class="col-md-8">                    	
+                    	<div class="form-group">
+	            	 		<img src="<?php echo $_smarty_tpl->tpl_vars['url']->value;?>
+resource/images/title.jpg" class="col-md-1"/>
+			            	<label class="col-md-2" class="control-label">Lớp học</label>
+			            	<div class="col-md-5">
+			            		<input type="text" class="form-control" value="<?php echo $_smarty_tpl->tpl_vars['lophoc']->value['LOPHOC_ten'];?>
+" readonly>
+                                <input type="hidden" class="form-control" value="<?php echo $_smarty_tpl->tpl_vars['lophoc']->value['MONKHOI_id'];?>
+" name="MONKHOI_id">
+			            	</div>
+			            </div>
+                        <div class="form-group">
+	            	 		<img src="<?php echo $_smarty_tpl->tpl_vars['url']->value;?>
+resource/images/title.jpg" class="col-md-1"/>
+			            	<label class="col-md-2" class="control-label">Ngày học</label>
+			            	<div class="col-md-5">
+			            		<input type="text" class="form-control" value="<?php echo date('d-m-Y',strtotime($_smarty_tpl->tpl_vars['tiethoc']->value['TIETHOC_ngayhoc']));?>
+" readonly>
+			            	</div>
+			            </div>
+			            <div class="form-group">
+	            	 		<img src="<?php echo $_smarty_tpl->tpl_vars['url']->value;?>
+resource/images/calendar.png" class="col-md-1"/>
+			            	<label class="col-md-2" class="control-label">Thứ</label>
+			            	<div class="col-md-5">
+			            		<input type="text" class="form-control" value="<?php if ($_smarty_tpl->tpl_vars['tiethoc']->value['LICHHOC_thu']==8) {?>Chủ nhật<?php } else {
+echo $_smarty_tpl->tpl_vars['tiethoc']->value['LICHHOC_thu'];
+}?>"  readonly>
+			            	</div>
+			            </div>
+			            <div class="form-group">
+	            	 		<img src="<?php echo $_smarty_tpl->tpl_vars['url']->value;?>
+resource/images/order.png" class="col-md-1"/>
+			            	<label class="col-md-2" class="control-label">Ca học</label>
+			            	<div class="col-md-5">
+			            		<input type="text" class="form-control" value="<?php echo $_smarty_tpl->tpl_vars['tiethoc']->value['CAHOC_id'];?>
+"  readonly>
+			            	</div>
+			            </div>            
+                        <div class="form-group">
+	            	 		<img src="<?php echo $_smarty_tpl->tpl_vars['url']->value;?>
+resource/images/report.png" class="col-md-1"/>
+			            	<label class="col-md-2" class="control-label">File điểm danh</label>
+			            	<div class="col-md-5">
+			            		<button type="button" name="filediemdanh" id="btnFileDiemDanh" class="btn btn-warning"><span class="glyphicon glyphicon-paperclip"> </span> Tải file</button><a href=<?php if ($_smarty_tpl->tpl_vars['tiethoc']->value['TIETHOC_anhdiemdanh']!=null&&$_smarty_tpl->tpl_vars['tiethoc']->value['TIETHOC_anhdiemdanh']!='') {?>"<?php echo $_smarty_tpl->tpl_vars['url']->value;
+echo $_smarty_tpl->tpl_vars['tiethoc']->value['TIETHOC_anhdiemdanh'];?>
+"<?php } else { ?> "" style="display:none"<?php }?>  id="linkFileDiemDanh" target="_blank">Link file</a>
+      <input type="hidden" name="TIETHOC_id" value="<?php echo $_smarty_tpl->tpl_vars['tiethoc']->value['TIETHOC_id'];?>
+">
+      <input type="hidden" name="TIETHOC_anhdiemdanh" value="<?php echo $_smarty_tpl->tpl_vars['tiethoc']->value['TIETHOC_anhdiemdanh'];?>
+" id="TIETHOC_anhdiemdanh">
+			            	</div>
+			            </div>				         
+		             	 
+		            </div>
+			        <div class="col-md-12">
+                      <table width="396" border="0" cellspacing="5" cellpadding="5" style="clear:both">
+                      <tbody>
+                        <tr>
+                        
+                      </tbody>
+                    </table>
+                    <table width="100%" border="1" cellspacing="5" cellpadding="5" class="table table-bordered table-hover">
+                      <tbody>
+                        <tr>
+                          <th width="7%" scope="col"><div align="center">STT</div></th>
+                          <th width="15%" scope="col"><div align="center">Ảnh</div></th>
+                          <th width="26%" scope="col"><div align="center">Tên học sinh</div></th>
+                          <th width="14%" scope="col"><div align="center">Điểm danh</div></th>
+                          <th width="7%" scope="col"><div align="center">Vòng</div></th>
+                          <th width="22%" scope="col"><div align="center">Nhận xét</div></th>
+                          <th width="25%" scope="col"><div align="center">Nộp bài</div></th>
+                          <th width="10%" scope="col"><div align="center">Bonus</div></th>
+                        </tr>
+                        
+                        <?php  $_smarty_tpl->tpl_vars['allhocsinh'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['allhocsinh']->_loop = false;
+ $_smarty_tpl->tpl_vars['i'] = new Smarty_Variable;
+ $_from = $_smarty_tpl->tpl_vars['diemdanh']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['allhocsinh']->key => $_smarty_tpl->tpl_vars['allhocsinh']->value) {
+$_smarty_tpl->tpl_vars['allhocsinh']->_loop = true;
+ $_smarty_tpl->tpl_vars['i']->value = $_smarty_tpl->tpl_vars['allhocsinh']->key;
+?>
+                        <tr>
+                          <td><div align="center"><?php echo $_smarty_tpl->tpl_vars['i']->value+1;?>
+</div></td>
+                          <td><div align="center"><img src="<?php echo $_smarty_tpl->tpl_vars['url']->value;
+echo $_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_anh'];?>
+" width="100" height="100"></div></td>
+                          <td><a href="<?php echo $_smarty_tpl->tpl_vars['url']->value;?>
+index.php/main/hocsinh/view/<?php echo $_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id'];?>
+" target="_blank"><?php echo $_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_ten'];?>
+</a></td>
+                          <td><div align="center">
+                              <input type="checkbox" name="cbDiemdanh[<?php echo $_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id'];?>
+]" value="<?php echo $_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id'];?>
+" <?php if ($_smarty_tpl->tpl_vars['allhocsinh']->value['DIEMDANH_present']==1) {?>checked<?php }?> data-toggle="toggle" data-on="Có mặt" data-off="Vắng mặt" data-onstyle="success" data-offstyle="danger"></div></td>
+                          <td><div align="center">
+                            <?php if ($_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_lenvong']==1) {?><input type="checkbox" name="phatvong[]" value="<?php echo $_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id'];?>
+"><br><input type="color"  value="<?php echo $_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_level-hientai'];?>
+" disabled><?php }?>
+                          </div></td>
+                          <td><div align="center">
+                            <textarea placeholder="Nhận xét.." name="DIEMDANH_nhanxet[<?php echo $_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id'];?>
+]" rows="4"><?php if ($_smarty_tpl->tpl_vars['allhocsinh']->value['DIEMDANH_nhanxet']!='') {
+echo $_smarty_tpl->tpl_vars['allhocsinh']->value['DIEMDANH_nhanxet'];
+}?></textarea>
+                          </div></td>
+                          <td> <div align="center"><label class="checkbox-inline">      
+                              <input type="checkbox" id="inlineCheckbox1" class="nopbai1" name="hocsinhnopbai1[<?php echo $_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id'];?>
+]"  	
+                               <?php if (isset($_smarty_tpl->tpl_vars['hocsinhdanopbai1']->value)) {?>
+                                <?php  $_smarty_tpl->tpl_vars['value'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['value']->_loop = false;
+ $_smarty_tpl->tpl_vars['key'] = new Smarty_Variable;
+ $_from = $_smarty_tpl->tpl_vars['hocsinhdanopbai1']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['value']->key => $_smarty_tpl->tpl_vars['value']->value) {
+$_smarty_tpl->tpl_vars['value']->_loop = true;
+ $_smarty_tpl->tpl_vars['key']->value = $_smarty_tpl->tpl_vars['value']->key;
+?> 
+                                    <?php if ($_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id']==$_smarty_tpl->tpl_vars['value']->value['HOCSINH_id']&&$_smarty_tpl->tpl_vars['value']->value['DIEM_trangthai']==0) {?> checked <?php }?> 
+                                    <?php if ($_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id']==$_smarty_tpl->tpl_vars['value']->value['HOCSINH_id']&&$_smarty_tpl->tpl_vars['value']->value['DIEM_trangthai']==1) {?> checked  onclick="return false" onkeydown="return false" <?php }?>
+                                    <?php }
+}?>>1
+                                </label>
+                            <label class="checkbox-inline">
+                              <input type="checkbox" id="inlineCheckbox2"class="nopbai2" name="hocsinhnopbai2[<?php echo $_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id'];?>
+]"
+                              <?php if (isset($_smarty_tpl->tpl_vars['hocsinhdanopbai2']->value)) {?>
+                                <?php  $_smarty_tpl->tpl_vars['value'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['value']->_loop = false;
+ $_smarty_tpl->tpl_vars['key'] = new Smarty_Variable;
+ $_from = $_smarty_tpl->tpl_vars['hocsinhdanopbai2']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['value']->key => $_smarty_tpl->tpl_vars['value']->value) {
+$_smarty_tpl->tpl_vars['value']->_loop = true;
+ $_smarty_tpl->tpl_vars['key']->value = $_smarty_tpl->tpl_vars['value']->key;
+?> 
+                                    <?php if ($_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id']==$_smarty_tpl->tpl_vars['value']->value['HOCSINH_id']&&$_smarty_tpl->tpl_vars['value']->value['DIEM_trangthai']==0) {?> checked <?php }?> 
+                                    <?php if ($_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id']==$_smarty_tpl->tpl_vars['value']->value['HOCSINH_id']&&$_smarty_tpl->tpl_vars['value']->value['DIEM_trangthai']==1) {?> checked  onclick="return false" onkeydown="return false" <?php }?>
+                                    <?php }
+}?>>2
+                                </label>
+                               </div>
+                        </td>
+                          <td>  <div align="center">
+                              <input type="number" step="any" name="DIEMDANH_bonus[<?php echo $_smarty_tpl->tpl_vars['allhocsinh']->value['HOCSINH_id'];?>
+]" value="<?php if (isset($_smarty_tpl->tpl_vars['diemdanh']->value[$_smarty_tpl->tpl_vars['i']->value]['DIEMDANH_bonus'])) {
+echo $_smarty_tpl->tpl_vars['diemdanh']->value[$_smarty_tpl->tpl_vars['i']->value]['DIEMDANH_bonus'];
+} else { ?>0<?php }?>">
+                          </div></td>
+                        </tr>
+                        <?php } ?>
+                            </tbody>
+                    </table>
+<br>
+<textarea placeholder="Ghi chú của giáo viên <?php echo $_smarty_tpl->tpl_vars['nguoidiemdanh']->value;?>
+.." cols="40" rows="5" name="ghichugiaovien"><?php if (isset($_smarty_tpl->tpl_vars['tiethoc']->value['TIETHOC_nhanxetgiaovien'])) {
+echo $_smarty_tpl->tpl_vars['tiethoc']->value['TIETHOC_nhanxetgiaovien'];
+}?>
+</textarea>
+
+<p>
+<button type="submit" name="btnDiemdanh" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-check"> </span> Cập nhật</button></p>
+
+			        </div>	
+            	</div>	
+</form>
+<?php echo '<script'; ?>
+>
+	$(document).ready(function(e) {
+		//Tải ảnh	
+        new AjaxUpload($('#btnFileDiemDanh'),{ 
+				action : '<?php echo $_smarty_tpl->tpl_vars['url']->value;?>
+index.php/main/upload/tiethoc/Lophocid<?php echo $_smarty_tpl->tpl_vars['tiethoc']->value['LOPHOC_id'];?>
+_Ngay-<?php echo $_smarty_tpl->tpl_vars['tiethoc']->value['TIETHOC_ngayhoc'];?>
+_Ca<?php echo $_smarty_tpl->tpl_vars['tiethoc']->value['CAHOC_id'];?>
+', //tên file xử lý upload
+				name   :  'formup',//tên form up ảnh mà ajax sẽ tạo			
+				onComplete: function(file, response) {
+					//response(phản hồi) là những gì được echo từ file upload.php , ở đây ta echo lại đường dẫn của file đó rồi gán vào 1 hình ảnh
+					if (response=='Error')
+						alert ('Upload xảy ra lỗi: định dạng cho phép DOC, PDF và định dạng ảnh');
+					else
+					{
+						alert ('Upload file điểm danh thành công');
+						$('#linkFileDiemDanh').attr('href', '<?php echo $_smarty_tpl->tpl_vars['url']->value;?>
+uploads/tiethoc/'+response).css('display','block'); 						
+						$('#TIETHOC_anhdiemdanh').val('uploads/tiethoc/'+response); 
+					}
+				}
+		});
+	});
+<?php echo '</script'; ?>
+>
+<?php }} ?>

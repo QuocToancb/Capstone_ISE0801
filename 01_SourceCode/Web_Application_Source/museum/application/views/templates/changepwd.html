@@ -1,0 +1,42 @@
+<form method="post" action="">
+<div class="panel-body">
+					<center> 
+                        <p><img src="{$url}resource/images/grade.png" width="75" height="76" /></p>
+                        <h3><strong>Đổi mật khẩu</strong></h3>
+                    </center>
+             		<br>
+             		<br>
+             		<div class="row">
+						<div class="col-md-4 col-md-offset-4">
+						 	<form id="form1" name="form1" method="post" action="">
+			            	 	<div class="form-group">
+    								<label>{if isset($thongbao)}{$thongbao}{/if}</label>
+					            	<label><strong>Mật khẩu cũ: </strong></label>
+					            	<input class="form-control" type="password" placeholder="Password" name="txtOldpwd" required>					            				            
+					            </div>
+					            <div class="form-group">
+					            	<label><strong>Mật khẩu mới: </strong></label>				            
+					            	<input class="form-control" type="password" placeholder="Password" id="password" name="txtNewpwd" required>					            	
+					            </div>
+					             <div class="form-group">
+					            	<label><strong>Nhập lại mật khẩu: </strong></label>			          
+					            	<input class="form-control" type="password" placeholder="Confirm Password" id="confirm_password" required>
+					            </div>			            				            
+					            <button class="btn btn-success" type="submit" name="btnChangepwd" id="btnChangepwd"><span class="glyphicon glyphicon-floppy-disk"></span> Cập Nhật </button>					          
+			             	</form>	 
+			            </div>
+			         </div>	
+            	</div>
+</form>
+<script>
+	$(document).ready(function(e) {
+        $('#btnChangepwd').click(function(e) {
+            if ($('#password').val() != $('#confirm_password').val()) 
+			{
+				alert('Bạn nhập lại mật khẩu chưa đúng');
+				return false;
+			}
+        });
+    });
+</script>
+ 
