@@ -1,0 +1,64 @@
+<!-- Main content -->
+			<div class="content-wrapper">
+
+				<!-- Page header -->
+				<div class="page-header">
+					<div class="page-header-content">
+						<div class="page-title">
+							<h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Yêu cầu đang chờ xử lí</span></h4>
+						</div>
+
+											
+					</div>
+
+					<div class="breadcrumb-line">
+						<ul class="breadcrumb">
+							<li><a href="index.html"><i class="icon-home2 position-left"></i> Home</a></li>
+							<li class="active">Yêu cầu đang chờ xử lí</li>
+						</ul>
+
+						
+					</div>
+				</div>
+				<!-- /page header -->
+
+
+				<!-- Content area -->
+				<div class="content">
+<!-- Basic datatable -->
+					<div class="panel panel-flat">
+						<table class="table datatable-basic">
+							<thead>
+								<tr>
+									<th class="col-md-1">ID Hiện vật</th>
+									<th class="col-md-2">Tên hiện vật</th>									
+									<th class="col-md-1">Hình ảnh</th>
+									<th class="col-md-1">Yêu cầu đã gửi</th>
+									<th class="col-md-1">Lý do</th>
+									<th class="col-md-1">Thời gian gửi</th>									
+								</tr>
+							</thead>
+							<tbody>
+							{foreach $museum_request as $item}
+								<tr>
+									<td>{$item.do_id}</td>
+									<td><a href="#">{$item.name}</a></td>									
+									<td><a href="#"><img src= "{$item.image}"" style="width: 58px; height: 58px; border-radius: 2px;" alt=""></a></td>
+									<td>
+									{if $item.request_type == 0} Yêu Cầu Xoá{/if}
+									{if $item.request_type == 1} Yêu Cầu Sửa{/if}
+									{if $item.request_type == 2} Yêu Cầu Kích Hoạt{/if}
+									</td>
+									<td>{$item.reason}</td>
+									<td>{$item.sent_time}</td>
+								</tr>
+							{/foreach}
+							</tbody>
+						</table>
+					</div>
+					<!-- /basic datatable -->
+</div>
+				<!-- /content area -->
+
+			</div>
+			<!-- /main content -->
