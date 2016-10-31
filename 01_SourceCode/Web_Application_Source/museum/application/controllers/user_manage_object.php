@@ -72,8 +72,11 @@
 					$Object_name = $this->input->get('txtObjectname', TRUE);
 					
 					//Update thông tin
-					$query = $this->db->query("SELECT * FROM displayed_object WHERE museum_id = ".$account['museum_id']." and name LIKE '%".$Object_name."%'");
-				$data['museum_object'] = $query->result_array();
+				// 	$query = $this->db->query("SELECT * FROM displayed_object WHERE displayed_object.museum_id = $muse_id  AND (
+				// 						displayed_object.do_id NOT IN (SELECT do_id FROM museum_request 
+				// 							WHERE museum_request.request_status=0)
+				// 										) AND displayed_object.current_status IN (0,2) and name LIKE '%".$Object_name."%'");
+				// $data['museum_object'] = $query->result_array();
 
 				}	
 
