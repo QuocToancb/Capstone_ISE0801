@@ -59,7 +59,7 @@
 				<li class="dropdown dropdown-user">
 					<a class="dropdown-toggle" data-toggle="dropdown">
 						<img src="{$url}resource/assets/images/placeholder.jpg" alt="">
-						<span>Bảo tàng lịch sử quốc gia Hà Nội</span>
+						<span>{if isset($account)}{$account.email}{else}{/if}</span>
 						<i class="caret"></i>
 					</a>
 
@@ -89,13 +89,27 @@
 					<div class="sidebar-user">
 						<div class="category-content">
 							<div class="media">
-								<a href="#" class="media-left"><img src="{$url}resource/assets/images/placeholder.jpg" class="img-circle img-sm" alt=""></a>
-								<div class="media-body">
-									<span class="media-heading text-semibold">Bảo tàng lịch sử quốc gia Hà Nội</span>
-									<div class="text-size-mini text-muted">
-										<i class="icon-pin text-size-small"></i> &nbsp;Quận Ba Đình, Hà Nội
-									</div>
-								</div>								
+									{if isset($account) && isset($nhomnguoidung)}
+									<div class="media-body">
+									<span class="media-heading text-semibold">TRANG QUẢN LÍ HỆ THỐNG</span>
+										<div class="text-size-mini text-muted">
+											
+											<i class="icon-pin text-size-small"></i> &nbsp;<!-- {$title.street}, {$title.city} -->
+											
+										</div>
+									</div>			
+									{else}
+										<a href="#" class="media-left"><img src="{$url}resource/assets/images/placeholder.jpg" class="img-circle img-sm" alt=""></a>
+										<div class="media-body">
+										<span class="media-heading text-semibold">TRANG QUẢN LÍ HỆ THỐNG </span>
+											<div class="text-size-mini text-muted">
+											
+											<i class="icon-pin text-size-small"></i> &nbsp;<!-- {$title.street}, {$title.city} -->
+											
+											</div>
+										</div>	
+									{/if}
+															
 							</div>
 						</div>
 					</div>
