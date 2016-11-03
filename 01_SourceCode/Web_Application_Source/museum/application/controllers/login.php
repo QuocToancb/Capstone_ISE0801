@@ -25,7 +25,7 @@
 					else
 						{					
 						header('Location: '.base_url().'index.php/main/user_manage_object');
-						//$data['title'] = 'TRANG QUẢN LÍ HỆ THỐNG';
+						
 						}
 				}
 				else if($result['status'] == 0){
