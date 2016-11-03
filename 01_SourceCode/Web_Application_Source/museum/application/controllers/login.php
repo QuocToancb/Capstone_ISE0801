@@ -6,8 +6,9 @@
 			$user = $this->input->post('txtEmail', TRUE); // returns all POST items with XSS filter - Lọc chuỗi, chống hack XSS
 			$pass = $this->input->post('txtPassword', TRUE); // returns all POST items with XSS filter - Lọc chuỗi, chống hack XSS
 			
-			
-			$result = $this->Model->checkLogin($user, $pass, TRUE);
+			$pass_md5 = md5($pass);
+
+			$result = $this->Model->checkLogin($user, $pass_md5, TRUE);
 			if (is_array($result))
 			{
 				if($result['status'] == 1 ){ //Tài khoản ở trạng thái active	
@@ -15,7 +16,17 @@
 					$museum_info = $this->Model->selectOne('museum', array('account_id' =>$result['account_id']));					
 					$newdata['museum_id'] = $museum_info['museum_id']; 	//đưa id bảo tàng vào sesion			
 					$this->session->set_userdata('accountlog',$newdata);
-					header('Location: '.base_url().'index.php/main/home');
+					//Nếu id bảo tàng rỗng thì
+					if ($museum_info['museum_id']=='')
+						{
+						header('Location: '.base_url().'index.php/main/admin_manage_museum');
+						
+						}
+					else
+						{					
+						header('Location: '.base_url().'index.php/main/user_manage_object');
+						//$data['title'] = 'TRANG QUẢN LÍ HỆ THỐNG';
+						}
 				}
 				else if($result['status'] == 0){
 					$data['thongbao'] = 'Tài khoản này đã bị vô hiệu';
@@ -29,4 +40,5 @@
 		}
 				
 		$this->smarty->view('login', $data); //Load tầng view và truyền thêm biến $data(file HTML)
+
 ?>

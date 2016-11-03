@@ -4,7 +4,7 @@
 		 if (isset($_POST['btnRequestAccout']))//Khi nút login được ấn 
 			{
 				$email = $this->input->post('txtEmail', TRUE); // returns all POST items with XSS filter - Lọc chuỗi, chống hack XSS
-				$password = $this->input->post('txtPassword', TRUE); 
+				$temp_password = $this->input->post('txtPassword', TRUE); 
 				$created_time = date("Y-m-d H:i:s", time()) ;
 				$status = 2; // (0 = De-active ; 1 = Active ; 2 = Pending)
 
@@ -15,7 +15,7 @@
 				$phone = $this->input->post('txtPhone', TRUE);
 				$website = $this->input->post('txtWebsite', TRUE);
 			
-
+				$password = md5($temp_password);
 
 				$this->Model->insert('account',
 						array(	
@@ -40,6 +40,8 @@
 								'museum_website'	=>$website
 						)
 					);
+
+				
 				echo "tao thành công"; exit;		
 			
 		 	}
