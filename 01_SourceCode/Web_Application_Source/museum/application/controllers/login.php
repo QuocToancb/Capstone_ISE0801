@@ -3,12 +3,24 @@
 		
 		if (isset($_POST['btnLogin']))//Khi nút login được ấn 
 		{
-			$user = $this->input->post('txtEmail', TRUE); // returns all POST items with XSS filter - Lọc chuỗi, chống hack XSS
+			$email = $this->input->post('txtEmail', TRUE); // returns all POST items with XSS filter - Lọc chuỗi, chống hack XSS
 			$pass = $this->input->post('txtPassword', TRUE); // returns all POST items with XSS filter - Lọc chuỗi, chống hack XSS
+			if(empty($email)){ 
+				$data['thongbao_email'] = 'Email không thể trống'; 
+				$this->smarty->view('login', $data); }
+
+			if(empty($pass)){ 
+				$data['thongbao_matkhau'] = 'Mật khẩu không thể trống'; 
+				$this->smarty->view('login', $data); }
+
+			
+			if(!preg_match("/^[^@]{1,64}@[^@]{1,255}$/", $email)){ 
+				$data['thongbao_email'] = 'Không đúng định dạng email'; 
+				$this->smarty->view('login', $data); }	
 			
 			$pass_md5 = md5($pass);
 
-			$result = $this->Model->checkLogin($user, $pass_md5, TRUE);
+			$result = $this->Model->checkLogin($email, $pass_md5, TRUE);
 			if (is_array($result))
 			{
 				if($result['status'] == 1 ){ //Tài khoản ở trạng thái active	

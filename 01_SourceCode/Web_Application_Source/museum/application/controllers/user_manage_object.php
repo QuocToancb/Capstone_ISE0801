@@ -12,9 +12,6 @@
 
 				$muse_id = $account['museum_id'];
 
-				//$data['museum_object'] = $this->Model->selectAll('displayed_object', array('museum_id'=> $account['museum_id']));	
-
-
 				$query = $this->db->query("SELECT * FROM displayed_object WHERE displayed_object.museum_id = $muse_id  AND (
 										displayed_object.do_id NOT IN (SELECT do_id FROM museum_request 
 											WHERE museum_request.request_status=0)
@@ -42,6 +39,7 @@
 								'sent_time'			=>$sent_time
 						)
 					);
+					header('Location: '.$data['url'].'index.php/main/user_requested');
 				}	
 
 				if (isset($_POST['btnSendDeleteRequest']))//Khi nút Submit thì lưu lại thông tin mới (đã sửa) của bảo tàng
@@ -64,6 +62,8 @@
 								'sent_time'			=>$sent_time
 						)
 					);
+					header('Location: '.$data['url'].'index.php/main/user_requested');
+
 				}	
 
 				if (isset($_GET['btnSearch']))//Khi nút Search thì tìm kiếm theo tên
@@ -72,20 +72,38 @@
 					$Object_name = $this->input->get('txtObjectname', TRUE);
 					
 					//Update thông tin
-				// 	$query = $this->db->query("SELECT * FROM displayed_object WHERE displayed_object.museum_id = $muse_id  AND (
-				// 						displayed_object.do_id NOT IN (SELECT do_id FROM museum_request 
-				// 							WHERE museum_request.request_status=0)
-				// 										) AND displayed_object.current_status IN (0,2) and name LIKE '%".$Object_name."%'");
-				// $data['museum_object'] = $query->result_array();
+					$query = $this->db->query("SELECT * FROM displayed_object WHERE displayed_object.museum_id = $muse_id  AND (
+										displayed_object.do_id NOT IN (SELECT do_id FROM museum_request 
+											WHERE museum_request.request_status=0)
+														) AND displayed_object.current_status IN (0,2) and name LIKE '%".$Object_name."%'");
+				$data['museum_object'] = $query->result_array();
 
 				}	
 
 				$data['temp']='User/User_Object_management.html';	
 
 				$act = $this->uri->segment(3);
-				//$data['add_object'] = $this->Model->selectOne('target_object', array('account_id'=>$nhomnguoidung[0]['account_id']));
+				$id = $this->uri->segment(4);
+			
 				switch($act)
 				{
+					case 'view_object_detail':
+						$data['ob_detail'] = $this->Model->selectOne('displayed_object', array('do_id'=>$id));	
+						$data['target_detail'] = $this->Model->selectOne('target_object', array('target_id'=>$data['ob_detail']['target_id']));
+						//echo 'xem thong tin hien vat'; exit;
+						$data['temp']='User/User_View_Object.html';
+						break;
+					case 'edit_object_detail':
+						$data['ob_detail'] = $this->Model->selectOne('displayed_object', array('do_id'=>$id));	
+						$data['target_detail'] = $this->Model->selectOne('target_object', array('target_id'=>$data['ob_detail']['target_id']));
+						
+						if ($data['ob_detail']['current_status'] != 0){
+							header('Location: '.base_url().'index.php/main/norole');
+						}else{
+						//echo 'SUA thong tin hien vat'; exit;
+						$data['temp']='User/User_Edit_Object.html';		
+						}				
+						break;
 					case 'add':
 						if (isset($_POST['btnAddObject']))//Khi nút Them moi hien vat thì them moi hien vat của bảo tàng
 						{
@@ -144,9 +162,11 @@
 										'sent_time'			=>$sent_time
 									)
 								);
-								header('Location: '.$data['url'].'index.php/main/user_request');// status la available go to request
-							}
-							header('Location: '.$data['url'].'index.php/main/user_manage_object'); // status la pending chuyen den manage
+								header('Location: '.$data['url'].'index.php/main/user_requested');// status la available go to request
+							} else 
+							{
+							header('Location: '.$data['url'].'index.php/main/user_manage_object');
+							} // status la pending chuyen den manage
 						}	
 						$data['temp']='User/User_Add_Object.html';
 
