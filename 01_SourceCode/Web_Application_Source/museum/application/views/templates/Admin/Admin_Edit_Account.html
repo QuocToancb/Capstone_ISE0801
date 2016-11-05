@@ -37,7 +37,7 @@
 											<legend class="text-semibold"><i class="icon-reading position-left"></i> Thông tin tài khoản</legend>
 											<div class="form-group">
 												<label>Email:</label>
-												<input type="text" class="form-control" name="txtEmail" required="" placeholder="Email" value ="{if isset($edit_account)}{$edit_account[0].email}{/if}">
+												<input type="text" class="form-control" name="txtEmail" required="" placeholder="Email" value ="{if isset($edit_account)}{$edit_account[0].email}{/if}" disabled>
 											</div>
 
 											<div class="form-group">
@@ -125,7 +125,7 @@
 								</div>
 
 								<div class="text-right">
-									<button type="submit" class="btn btn-primary" name="btnSave">Thêm Tài Khoản <i class="icon-arrow-right14 position-right"></i></button>
+									<button type="submit" class="btn btn-primary" name="btnSave">Lưu Thay Đổi <i class="icon-arrow-right14 position-right"></i></button>
 								</div>
 							</div>
 						</div>

@@ -1,4 +1,4 @@
-                <?php
+<?php
 		$data['url']=base_url();
 		$account = $this->session->userdata('accountlog');
 		$data['account']=$account['accountlog']; //đưa ra thông tin người dùng ta tầng view
@@ -10,7 +10,7 @@
 		else	//Nếu có quyền truy cập thì load
 		{
 			
-			$query = $this->db->query("SELECT * FROM museum, account WHERE (museum.account_id = account.account_id) and (account.status = 1)");	
+			$query = $this->db->query("SELECT * FROM museum, account WHERE (museum.account_id = account.account_id) and (account.status = 1 or account.status = 0)");	
 			$data['manage_account'] = $query->result_array();
 			$data['temp']='Admin/Admin_Manage_Account.html';
 			
@@ -36,12 +36,12 @@
 							$phone = $this->input->post('txtPhone', TRUE);
 							$website = $this->input->post('txtWebsite', TRUE);
 							//$metadata = $this->input->post('txtMetadata', TRUE);
-
+							$md_password = md5($new_password);
 							//Insert thông tin in  table
 							$this->Model->insert('account',
 								array(
 										'email'			=>$new_email, 
-										'password'		=>$new_password, 
+										'password'		=>$md_password, 
 										'status'		=>$status,
 										'created_time'	=>$create_time
 									)
@@ -85,19 +85,11 @@
 							$phone = $this->input->post('txtPhone', TRUE);
 							$website = $this->input->post('txtWebsite', TRUE);
 							//$metadata = $this->input->post('txtMetadata', TRUE);
-
+							$mu_password = md5($museum_password);
 							//Insert thông tin in Target_Object table
 							$this->Model->update('account',
 								array(
-										'password'		=>$museum_password, 
-										'status'		=>$status
-									),
-								array(
-									'account_id'=>$id )
-							);
-							$this->Model->update('account_group',
-								array(
-										'password'		=>$museum_password, 
+										'password'		=>$mu_password, 
 										'status'		=>$status
 									),
 								array(
