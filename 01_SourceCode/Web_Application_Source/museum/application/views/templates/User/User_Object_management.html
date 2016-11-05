@@ -64,7 +64,7 @@
 								{foreach $museum_object as $item}
 					                    <tr>
 					                    	<td>{$item.do_id}</td>
-											<td><a href="#">{$item.name}</a></td>
+											<td><a href="{$url}index.php/main/user_manage_object/view_object_detail/{$item.do_id}">{$item.name}</a></td>
 											<td>{$item.text_description}</td>
 											<td><a href="#"><img src="{$item.image}" style="width: 58px; height: 58px; border-radius: 2px;" alt=""></a></td>
 											<td>{$item.audio}</td>
@@ -72,19 +72,43 @@
 											<td>
 											{if $item.current_status == 0}<span class="label label-default"> PENDING</span>{/if}
 											{if $item.current_status == 2}<span class="label label-success"> ACTIVED</span>{/if}</td>
+											{if $item.current_status == 0}
 											<td class="text-center">
 												<ul class="icons-list">
+													<li class="text-primary-600 text-default"><a href="{$url}index.php/main/user_manage_object/edit_object_detail/{$item.do_id}"><i class="icon-pencil7"></i>
+														Sửa
+														</li>
+													
 													<li class="dropdown">
-														<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-															<i class="icon-menu9"></i>
+														<a href="#" class="dropdown-toggle text-default" data-toggle="dropdown">
+															<i class="icon-cog7"></i>
+															Gửi yêu cầu
+															<span class="caret"></span>
 														</a>
+														<ul class="dropdown-menu dropdown-menu-right">											
+															<li><a data-toggle="modal" href="#delete_modal" class="open_delete_request_form" data-id="{$item.do_id}"><i class="icon-file-pdf" data-toggle="modal" data-target="#modal_default" ></i> Yêu cầu xóa</a></li>
+														</ul>
+													</li>
+												</ul>
+											</td> {/if}
+											{if $item.current_status == 2}
+											<td class="text-center">
+												<ul class="icons-list">												
+													
+													<li class="dropdown">
+														<a href="#" class="dropdown-toggle text-default" data-toggle="dropdown">
+														<i class="icon-cog7"></i>
+														Gửi yêu cầu
+														<span class="caret"></span>
+														</a>
+
 														<ul class="dropdown-menu dropdown-menu-right">
 															<li><a data-toggle="modal" href="#edit_modal" class="open_edit_request_form"  data-id="{$item.do_id}" ><i class="icon-file-pdf" data-toggle="modal" data-target="#modal_default"></i> Yêu cầu sửa</a></li>
 															<li><a data-toggle="modal" href="#delete_modal" class="open_delete_request_form" data-id="{$item.do_id}"><i class="icon-file-pdf" data-toggle="modal" data-target="#modal_default" ></i> Yêu cầu xóa</a></li>
 														</ul>
 													</li>
 												</ul>
-											</td>    
+											</td> {/if}   
 					                    </tr>
                                 {/foreach}
 							</tbody>
