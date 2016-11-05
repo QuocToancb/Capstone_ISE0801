@@ -46,7 +46,7 @@
 										'created_time'	=>$create_time
 									)
 							);
-							$data['account'] = $this->Model->selectOne('account', array('email'=>$email));
+							$data['account'] = $this->Model->selectOne('account', array('email'=>$new_email));
 					 		$account_id_new =  $data['account']['account_id']; // Lấy Account_ID của tài khoản mới thêm
 
 							$this->Model->insert('museum', // Thêm thông tin vào bảo museum.

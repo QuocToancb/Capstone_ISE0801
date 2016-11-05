@@ -202,6 +202,26 @@ class Main extends CI_Controller
 		else //nếu chưa login thì chuyển qua trang login
 			header('Location: '.base_url().'index.php/main/login');
 	}
+	function admin_manage_account()
+	{
+		$data['url']=base_url();
+		
+		$account = $this->session->userdata('accountlog');
+		$nhomnguoidung = $this->session->userdata('nhomnguoidungss');  		
+		if (is_array($account))
+		{//Nếu login rồi thì
+			$this->norole=$this->Model->checkRole($nhomnguoidung);
+			//Nếu không có quyền truy cập thì:	
+			if ($this->norole==false) 
+				header('Location: '.base_url().'index.php/main/norole');
+			else	//Nếu có quyền truy cập thì load index	
+			{
+				require_once('admin_manage_account.php');
+			}
+		}
+		else //nếu chưa login thì chuyển qua trang login
+			header('Location: '.base_url().'index.php/main/login');
+	}
 	function upload()
 	{
 		$tenfile = $this->uri->segment(4);
