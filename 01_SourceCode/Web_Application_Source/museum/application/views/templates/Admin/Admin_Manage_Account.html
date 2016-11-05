@@ -1,0 +1,151 @@
+<!-- Main content -->
+			<div class="content-wrapper">
+
+				<!-- Page header -->
+				<div class="page-header">
+					<div class="page-header-content">
+						<div class="page-title">
+							<h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Quản lí tài khoản hệ thống</span></h4>
+						</div>
+						<div class="heading-elements">
+							<a href="{$url}index.php/main/admin_manage_account/admin_new_account" class="btn btn-labeled btn-labeled-right bg-blue heading-btn" name="btnAddNewAccount">Tạo tài khoản<b><i class="icon-plus-circle2"></i></b></a>
+						</div>		
+					</div>
+
+					<div class="breadcrumb-line">
+						<ul class="breadcrumb">
+							<li><a href="index.html"><i class="icon-home2 position-left"></i> Home</a></li>
+							<li><a href="index.html">Quản lý bảo tàng</a></li>
+							<li class="active">FU Museum FPT</li>
+						</ul>
+
+						
+					</div>
+				</div>
+				<!-- /page header -->
+
+
+				<!-- Content area -->
+				<div class="content">
+				<!-- Basic datatable -->
+					<div class="panel panel-flat">
+						
+						<table class="table datatable-basic">
+							<thead>
+								<tr class="bg-teal-400">
+									<th class="col-md-1">Email</th>
+									<th class="col-md-3">Tên bảo tàng</th>
+									<th class="col-md-1">Số nhà</th>
+									<th class="col-md-1">Xã/ Phường/ Quận</th>
+									<th class="col-md-1">Tỉnh/ Thành phố</th>
+									<th class="col-md-1">Số điện thoại</th>
+									<th class="col-md-1">Website</th>
+									<th class="col-md-1"></th>
+									
+								</tr>
+							</thead>
+							<tbody>
+								{foreach $manage_account as $item}
+								<tr>
+									<td>{$item.email} </td>
+									<td><a href="#">{$item.museum_name}</a></td>
+									<td>{$item.museum_house_no}</td>
+									<td>{$item.museum_street}</td>										
+									<td>{$item.museum_city}</td>										
+									<td>{$item.museum_phone}</td>
+									<td>{$item.museum_website}</td>	
+									<td>
+										<a href="{$url}index.php/main/admin_manage_account/edit_account/{$item.account_id}/" class="btn bg-green"><b><i class="icon-pencil4"></i> &nbsp;Sửa</b></a>									
+									</td>									
+								</tr>
+								{/foreach}
+							</tbody>
+						</table>
+						<!-- Request to Edit Modal -->
+						<div id="edit_modal" class="modal fade" data-backdrop="false">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header bg-primary">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h5 class="modal-title"><span><i class="icon-pencil4"></i></span> &nbsp;Gửi yêu cầu sửa dữ liệu hiện vật</h5>
+									</div>
+
+									<form action="#">
+									<div class="modal-body">
+										<div class="form-group">
+											
+											<div class="row">	
+												<div class="col-sm-12">											
+												<input type="textarea" placeholder="Lý do gửi yêu cầu" class="form-control">
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+												<br>
+													<p><i>Sau khi yêu cầu được được phê duyệt chấp nhận. Hiện vật sẽ có trạng thái "Pending", cho phép chỉnh sửa dữ liệu.</i></p>													
+												</div>												
+											</div>
+										</div>	
+									</div>
+
+									<div class="modal-footer">
+										<button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
+										<button type="submit" class="btn btn-primary">Gửi yêu cầu</button>
+									</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					<!-- /Request to Edit Modal -->
+					<!-- Request to Delete Modal -->
+						<div id="delete_modal" class="modal fade" data-backdrop="false">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header bg-danger">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h5 class="modal-title"><i class="icon-eraser2"></i> &nbsp;Gửi yêu cầu xóa hiện vật</h5>
+									</div>
+
+									<form action="#">
+									<div class="modal-body">
+										<div class="form-group">
+											
+											<div class="row">	
+												<div class="col-sm-12">											
+												<input type="textarea" placeholder="Lý do gửi yêu cầu" class="form-control">
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+												<br>
+													<p><i>Sau khi yêu cầu được được phê duyệt chấp nhận. Hiện vật sẽ được xóa và không còn xuất hiện trong danh sách quản lí hiện vật.</i></p>													
+												</div>												
+											</div>
+										</div>	
+									</div>
+
+									<div class="modal-footer">
+										<button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
+										<button type="submit" class="btn btn-danger">Gửi yêu cầu</button>
+									</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					<!-- /Request to Delete Modal -->
+					</div>
+					<!-- /basic datatable -->
+					
+
+
+					<!-- Footer -->
+					<div class="footer text-muted">
+						&copy; 2015. <a href="#">Limitless Web App Kit</a> by <a href="http://themeforest.net/user/Kopyov" target="_blank">Eugene Kopyov</a>
+					</div>
+					<!-- /footer -->
+
+				</div>
+				<!-- /content area -->
+
+			</div>
+			<!-- /main content -->
