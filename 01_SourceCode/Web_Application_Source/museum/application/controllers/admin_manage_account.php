@@ -10,7 +10,7 @@
 		else	//Nếu có quyền truy cập thì load
 		{
 			
-			$query = $this->db->query("SELECT * FROM museum, account WHERE museum.account_id = account.account_id");	
+			$query = $this->db->query("SELECT * FROM museum, account WHERE (museum.account_id = account.account_id) and (account.status = 1)");	
 			$data['manage_account'] = $query->result_array();
 			$data['temp']='Admin/Admin_Manage_Account.html';
 			
