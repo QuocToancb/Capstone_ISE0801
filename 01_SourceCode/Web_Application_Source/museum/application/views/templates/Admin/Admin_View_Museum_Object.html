@@ -70,7 +70,11 @@
 											{if $item.current_status == 0}<span class="label label-default"> PENDING</span>{/if}
 											{if $item.current_status == -1}<span class="label label-danger"> DE-ACTIVE</span>{/if}
 											{if $item.current_status == 2}<span class="label label-success"> ACTIVED</span>{/if}</td>
-											<td>Yêu cầu kích hoạt</td>   
+											<td>{$item.request_type}
+											{if $item.request_type == -1} Yêu Cầu Xoá{/if}
+									{if $item.request_type == 1} Yêu Cầu Sửa{/if}
+									{if $item.request_type == 2} Yêu Cầu Kích Hoạt{/if}
+									{if $item.request_type == 0} {/if}</td>   
 					                    </tr>
                                 {/foreach}	
 								
