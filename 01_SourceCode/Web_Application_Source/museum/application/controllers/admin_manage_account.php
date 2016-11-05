@@ -23,8 +23,8 @@
 					case 'admin_new_account':
 						if (isset($_POST['btnSave']))//Khi nút Them moi hien vat thì them moi hien vat của bảo tàng
 					 	{	
-							$new_email = $this->input->post('txtEmail', TRUE);
-							$new_password = $this->input->post('txtPassword', TRUE);
+							$new_email = $this->input->post('txtNewEmail', TRUE);
+							$new_password = $this->input->post('txtNewPassword', TRUE);
 							$create_time = date("Y-m-d H:i:s", time()) ;
 							$status = $this->input->post('status', TRUE);// trạng thái 1=acitve hay 0=deactive
 							$role = $this->input->post('txtRole', TRUE); // quyền truy cập 2=museum hay là 1=addmin
