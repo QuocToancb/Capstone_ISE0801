@@ -1,0 +1,175 @@
+
+<!-- <script type="text/javascript" src="{$url}resource/assets/js/pages/components_modals.js"></script> -->
+			<div class="content-wrapper">
+
+				<!-- Page header -->
+				<div class="page-header">
+					<div class="page-header-content">
+						<div class="page-title">
+							<h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Các yêu cầu đang chờ xử lí từ {if isset($museum_detail)}{$museum_detail.museum_name}{/if}</span></h4>
+						</div>											
+					</div>
+
+					<div class="breadcrumb-line">
+						<ul class="breadcrumb">							
+							<li><a href="index.html"><i class="icon-home2 position-left"></i>Quản lí bảo tàng</a></li>
+							<li>{if isset($museum_detail)}{$museum_detail.museum_name}{/if}</li>
+							<li class="active">Các yêu cầu đang chờ xử lí</li>
+						</ul>
+
+						
+					</div>
+				</div>
+				<!-- /page header -->
+
+
+				<!-- Content area -->
+				<div class="content">
+				<!-- Basic datatable -->
+					<div class="panel panel-flat">
+						
+						<table class="table datatable-basic">
+							<thead>
+								<tr class="bg-teal-400">
+									<th class="col-md-1">STT</th>
+									<th class="col-md-2">Tên hiện vật</th>									
+									<th class="col-md-1">Hình ảnh</th>
+  								    <th class="col-md-2">Trạng thái hiện tại</th>
+									<th class="col-md-2">Yêu cầu</th>
+									<th class="col-md-2">Lý do</th>										
+									<th class="col-md-2">Thời gian gửi</th>	
+									<th class="col-md-2"><i class="icon-arrow-down12"></i></th>
+									
+								</tr>
+							</thead>
+							<tbody>
+
+								{foreach $museum_object as $stt => $item}
+								<tr class="">
+									<td>{$stt + 1}</td>
+									<td><a href="{$url}index.php/main/admin_manage_museum/view_object_detail/{$item.do_id}">{$item.name}</a></td>
+									<td><a href="#"><img src="{$item.image}" style="width: 58px; height: 58px; border-radius: 2px;" alt=""></a></td>																
+									<td>{if $item.current_status == 0}<span class="label label-default"> PENDING</span>{/if}
+										{if $item.current_status == 1}<span class="label label-info"> AVAILABLE</span>{/if}
+										{if $item.current_status == 2}<span class="label label-success"> ACTIVED</span>{/if}
+										{if $item.current_status == -1}<span class="label label-danger"> DE-ACTIVE</span>{/if}</td>
+									<td>{if $item.request_type == 0} Yêu Cầu Xoá{/if}
+									{if $item.request_type == 1} Yêu Cầu Sửa{/if}
+									{if $item.request_type == 2} Yêu Cầu Kích Hoạt{/if}</td>
+									<td>{$item.reason}</td>
+									<td>{$item.sent_time|date_format:'H:i:s  d-m-Y'}</td>
+									<td>
+										<a data-toggle="modal" data-m_request_id="{$item.m_request_id}" data-do_id="{$item.do_id}" data-request_type="{$item.request_type}" data-object_name="{$item.name}" data-request_type_explain="{if $item.request_type == 0}Yêu Cầu Xoá{/if}{if $item.request_type == 1}Yêu Cầu Sửa{/if}{if $item.request_type == 2}Yêu Cầu Kích Hoạt{/if}"  data-reason="{$item.reason}" class="btn text-default open_confirm_request_form" href="#edit_modal"><b><i class="icon-quill4"></i></b> &nbsp;Phê duyệt</a>
+										
+									</td>
+								</tr>					            
+                                {/foreach}	
+
+								
+								
+								
+								
+							</tbody>
+						</table>
+						<!-- Request to Edit Modal -->
+						<div id="edit_modal" class="modal fade" data-backdrop="false">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close close_form" data-dismiss="modal">&times;</button>
+										<h5 class="modal-title"><span><i class="icon-quill4"></i></span> &nbsp;Phê duyệt yêu cầu bảo tàng</h5>
+									</div>
+
+									<form action="" method="POST">
+									<div class="modal-body">
+										<div class="form-group">											
+											<div class="row">
+												<input type="hidden" name="hdnm_request_id" id="hdnm_request_id" value="" >
+												<input type="hidden" name="hdndo_id" id="hdndo_id" value="" >
+												<input type="hidden" name="hdnrequest_type" id="hdnrequest_type" value="" \>
+												<div class="col-sm-12">											
+													<div class="form-group">
+														<label class="control-label text-semibold">Tên hiện vật:</label>	
+														<input type="text" id="txtObjectname" value="" class="form-control" disabled>	
+													</div>
+												</div>												
+											</div>
+											<div class="row">
+												<div class="col-sm-5">											
+													<div class="form-group">
+														<label class="control-label text-semibold">Loại yêu cầu:</label>	
+														<input type="text" id="txtrequesttype" value="" class="form-control" disabled>	
+													</div>
+												</div>	
+												<div class="col-sm-7">
+													<div class="form-group">
+														<label class="control-label text-semibold">Lý do:</label>	
+														<input type="text" id="txtreason" value="" class="form-control" disabled>	
+													</div>																					
+												</div>	
+																						
+											</div>
+										</div>	
+									</div>
+
+									<div class="modal-footer">
+										<button type="button" class="close_form btn btn-link" data-dismiss="modal">Đóng</button>
+										<button type="submit" name="btnDeny" class="btn btn-danger"><i class="icon-cross2"></i> &nbsp;Từ chối</button>
+										<button type="submit" name="btnAccept" class="btn btn-success"><i class="icon-checkmark3"></i> &nbsp;Chấp nhận</button>
+										
+									</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					<!-- /Request to Edit Modal -->
+					
+					</div>
+					<!-- /basic datatable -->
+					
+
+
+					<!-- Footer -->
+					<div class="footer text-muted">
+						&copy; 2015. <a href="#">Limitless Web App Kit</a> by <a href="http://themeforest.net/user/Kopyov" target="_blank">Eugene Kopyov</a>
+					</div>
+					<!-- /footer -->
+
+				</div>
+				<!-- /content area -->
+
+			</div>
+			<!-- /main content -->
+
+			<script>
+						$(document).on("click", ".open_confirm_request_form", function () {
+							var m_request_id= $(this).data('m_request_id');
+							var do_id= $(this).data('do_id');
+							var request_type= $(this).data('request_type');
+
+							var object_name= $(this).data('object_name');
+							var request_type_explain= $(this).data('request_type_explain');
+							var reason= $(this).data('reason');							
+
+							$("#hdnm_request_id").val( m_request_id );
+							$("#hdndo_id").val( do_id );
+							$("#hdnrequest_type").val( request_type );
+
+							
+							$("#txtObjectname").val( object_name );
+							$("#txtrequesttype").val( request_type_explain );
+							$("#txtreason").val( reason );
+							//var do_id = $(this).data('id');
+							//$(".modal-body #do_id_edit").val( do_id );
+							var bd = $('<div class="modal-backdrop fade in"></div>');
+							  bd.appendTo(document.body);
+							  
+						});		
+
+						$(".close_form").click(function() {
+						  $(".modal-backdrop").remove();
+						});				
+
+					</script>
+
+	

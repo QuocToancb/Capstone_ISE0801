@@ -1,0 +1,182 @@
+
+	
+	<!-- Theme JS files -->	
+	<script type="text/javascript" src="assets/js/plugins/forms/styling/uniform.min.js"></script>
+	
+	<script type="text/javascript" src="assets/js/pages/form_inputs.js"></script>
+	<!-- /theme JS files -->
+
+
+			<!-- Main content -->
+			<div class="content-wrapper">
+
+				<!-- Page header -->
+				<div class="page-header">
+					<div class="page-header-content">
+						<div class="page-title">
+							<h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Thông tin hiện vật</span></h4>
+						</div>		
+					</div>
+
+					<div class="breadcrumb-line">
+						<ul class="breadcrumb">
+							<li><a href="index.html"><i class="icon-home2 position-left"></i> Home</a></li>							
+							<li class="active">Thông tin bảo tàng</li>
+						</ul>
+
+					</div>
+				</div>
+				<!-- /page header -->
+
+
+				<!-- Content area -->
+				<div class="content">
+				<!-- Horizontal form -->
+							<div class="panel panel-flat">	
+								<div class="panel-body">
+									<div class="row">
+									<div class="col-md-6">
+										<fieldset>
+											<legend class="text-semibold"><i class=" icon-pyramid2 position-left"></i> Nội dung hiện vật</legend>
+											
+											<div class="form-group">
+														<div class="media no-margin-top">
+															<div class="media-left">
+																<a href="#"><img src="assets/images/placeholder.jpg" style="width: 116px; height: 116px; border-radius: 2px;" alt=""></a>
+															</div>
+
+															<div class="media-body">
+																<span class="help-block">Mã hiện vật: {if isset($ob_detail)}{$ob_detail.do_id}{/if}</span>
+																<h5 class="text-semibold">{if isset($ob_detail)}{$ob_detail.name}{/if}</h5>
+																<label class="text-semibold"><i>{if isset($ob_detail)}{$ob_detail.text_description}{/if}</i></label>
+															</div>
+														</div>
+											</div>
+											
+											<div class="form-group">
+												<label>Audio thuyết minh:</label>
+												<input type="text" class="form-control" value="{if isset($ob_detail)}{$ob_detail.audio}{/if}" placeholder="" disabled>
+											</div>
+
+											<div class="form-group">
+												<label>Phim tư liệu:</label>
+												<input type="text" class="form-control" value="{if isset($ob_detail)}{$ob_detail.video}{/if}" placeholder="" disabled>
+											</div>	
+											
+											<div class="form-group">
+												<label>Model 3D:</label>
+												<input type="text" class="form-control" value="{if isset($ob_detail)}{$ob_detail.model}{/if}" placeholder="" disabled>
+											</div>					
+											
+										
+																	
+										</fieldset>
+									</div>
+
+									<div class="col-md-6">
+										<fieldset>
+											
+											<legend class="text-semibold"><i class="icon-eye position-left"></i> Trạng thái hiện vật</legend>
+											<div class="row">
+												<div class="col-md-12">													
+													<div class="form-group">													
+													<label><b>Trạng thái hiện tại:</b></label>
+													{if isset($ob_detail) && $ob_detail.current_status == 1}<span class="label label-info" data-toggle="tooltip" data-placement="bottom" title="Trạng thái hiện vật đã sẵn sàng chờ kích hoạt từ quản trị viên. Không cho phép người dùng sửa đổi dữ liệu">AVAILABLE</span>{/if}
+													{if isset($ob_detail) && $ob_detail.current_status == 2}<span class="label label-success" data-toggle="tooltip" data-placement="bottom" title="Trạng thái hiện vật đã sẵn sàng chờ kích hoạt từ quản trị viên. Không cho phép người dùng sửa đổi dữ liệu">ACTIVE</span>{/if}
+													{if isset($ob_detail) && $ob_detail.current_status == -1}<span class="label label-danger" data-toggle="tooltip" data-placement="bottom" title="Trạng thái hiện vật đã sẵn sàng chờ kích hoạt từ quản trị viên. Không cho phép người dùng sửa đổi dữ liệu">DE-ACTIVE</span>{/if}	
+													{if isset($ob_detail) && $ob_detail.current_status == 0}<span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Trạng thái hiện vật đã sẵn sàng chờ kích hoạt từ quản trị viên. Không cho phép người dùng sửa đổi dữ liệu">PENDING</span>{/if}									
+
+													
+													</div>	
+													
+													<div class="form-group">													
+													<label><b>Thời gian thêm hiện vật:</b></label>
+													<span>03-09-2016 05:45:46</span>
+													</div>
+													
+												<!-- <div class="form-group">  //chú thích hiện vật
+														<span class="help-block">Chú thích trạng thái:</span>
+														<div class="row">
+															<div class="col-md-2"><span class="label label-default">Pending </span></div>
+															<div class="col-md-10"><span class="help-block">Chú thích trạng thái:</span></div>
+														</div>	
+														<div class="row">
+															<div class="col-md-2"><span class="label label-info">Available </span></div>
+															<div class="col-md-10"><span class="help-block">Chú thích trạng thái:</span></div>
+														</div>	
+														<div class="row">
+															<div class="col-md-2"><span class="label label-success">Active </span></div>
+															<div class="col-md-10"><span class="help-block">Chú thích trạng thái:</span></div>
+														</div>	
+														<div class="row">
+															<div class="col-md-2"><span class="label label-danger">De-Active </span></div>
+															<div class="col-md-10"><span class="help-block">Chú thích trạng thái:</span></div>
+														</div>			
+													</div> -->
+												</div>												
+											</div>
+											
+						                	<legend class="text-semibold"><i class="icon-eye position-left"></i> Nội dung nhận diện</legend>
+											<div class="row">
+												<div class="col-md-12">
+													<div class="form-group">
+														<label>Target Name:</label>
+														<input type="text" placeholder="" class="form-control" value="{if isset($target_detail)}{$target_detail.target_name}{/if}" disabled>
+													</div>
+													
+													<div class="form-group">
+														<label>Target Image:</label>
+														<div class="media no-margin-top">
+															<div class="media-left">
+																<a href="#"><img src="assets/images/placeholder.jpg" style="width: 58px; height: 58px; border-radius: 2px;" alt=""></a>
+															</div>
+
+															<div class="media-body">																
+																<input type="text" placeholder="" class="form-control" value="{if isset($target_detail)}{$target_detail.target_image}{/if}" disabled>
+															</div>
+														</div>														
+													</div>
+													
+													<div class="form-group">
+														<label>Quét hiện vật:</label>
+														<input type="text" placeholder="" class="form-control" value="{if isset($target_detail)}{$target_detail.scaned_object}{/if}" disabled>
+													</div>
+												</div>												
+											</div>		
+
+												
+																					
+
+											
+											
+											
+										</fieldset>
+									</div>
+								</div>
+								<div class="text-right">
+									<button type="submit" class="btn btn-primary">Trở lại quản lí hiện vật <i class="icon-arrow-left13 position-right"></i></button>
+								</div>
+								</div>
+							</div>
+							<script>
+							$(document).ready(function(){
+								$('[data-toggle="tooltip"]').tooltip();
+							});
+							</script>
+							<!-- /horizotal form -->
+					
+
+
+					<!-- Footer -->
+					<div class="footer text-muted">
+						&copy; 2015. <a href="#">Limitless Web App Kit</a> by <a href="http://themeforest.net/user/Kopyov" target="_blank">Eugene Kopyov</a>
+					</div>
+					<!-- /footer -->
+
+				</div>
+				<!-- /content area -->
+
+			</div>
+			<!-- /main content -->
+
+		<
