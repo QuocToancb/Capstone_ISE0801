@@ -15,7 +15,7 @@ Class Model extends CI_Model
 		if ($query->num_rows() > 0 ) //Nếu trả về dữ liệu (trong db có bản ghi của tk và mk đó)
 		{
 			$detail = $query->row_array();//trả về dữ liệu dạng mảng theo tên, chỉ trả về 1 dòng đầu tiên	
-			$this->session->set_userdata('nhomnguoidungss', $detail['group_id']);	
+			$this->session->set_userdata('nhomnguoidungss', $detail['group_id']);
 			return $query->row_array(); //trả về dữ liệu dạng mảng theo tên, chỉ trả về 1 dòng đầu tiên
 				//return $query->result(); //trả về dữ liệu dạng mảng obj
 		}
