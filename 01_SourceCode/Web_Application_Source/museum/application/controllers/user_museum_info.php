@@ -9,7 +9,7 @@
 			header('Location: '.base_url().'index.php/main/norole');
 		else	//Nếu có quyền truy cập thì load
 		{		
-				$data['museum_info'] = $this->Model->selectOne('museum', array('account_id'=>$nhomnguoidung[0]['account_id']));			
+				$data['museum_info'] = $this->Model->selectOne('museum', array('account_id'=>$nhomnguoidung));	
 				
 				if (isset($_POST['btnSave']))//Khi nút Submit thì lưu lại thông tin mới (đã sửa) của bảo tàng
 				{
@@ -31,7 +31,7 @@
 								'museum_website'	=>$website
 							), 
 						array(
-								'account_id'=>$nhomnguoidung[0]['account_id']
+								'account_id'=>$nhomnguoidung
 							)
 					);
 					//echo 'testing'.$nhomnguoidung['account_id'];
