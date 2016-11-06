@@ -26,10 +26,10 @@
 				if($result['status'] == 1 ){ //Tài khoản ở trạng thái active	
 					$newdata['accountlog']=$result;
 					$museum_info = $this->Model->selectOne('museum', array('account_id' =>$result['account_id']));
-					$newdata['museum_info'] = $museum_info; 	//đưa id bảo tàng vào sesion
+					if (count($museum_info)>0)	$newdata['museum_info'] = $museum_info; 	//đưa id bảo tàng vào sesion
 					$this->session->set_userdata('accountlog',$newdata);
 					//Nếu id bảo tàng rỗng thì
-					if ($museum_info['museum_id']=='')
+					if (isset($museum_info) && $museum_info['museum_id']=='')
 						{
 						header('Location: '.base_url().'index.php/main/admin_manage_museum');
 						}
