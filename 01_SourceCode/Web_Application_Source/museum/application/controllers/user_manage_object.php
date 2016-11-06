@@ -10,7 +10,7 @@
 		else	//Nếu có quyền truy cập thì load
 		{
 
-				$muse_id = $account['museum_id'];
+				$muse_id = $account['museum_info']['museum_id'];
 
 				$query = $this->db->query("SELECT * FROM displayed_object WHERE displayed_object.museum_id = $muse_id  AND (
 										displayed_object.do_id NOT IN (SELECT do_id FROM museum_request 
@@ -22,7 +22,7 @@
 				{
 					
 					$do_id = $this->input->post('hdndo_id', TRUE);
-					$museum_id = $account['museum_id'];
+					$museum_id = $account['museum_info']['museum_id'];
 					$reason = $this->input->post('txtreason', TRUE);
 					$request_status = 0; //(0 = Pending, 1=Accepted,2=Deny)
 					$request_type = 1; //0=Delete request;1=Change request
@@ -45,7 +45,7 @@
 				if (isset($_POST['btnSendDeleteRequest']))//Khi nút Submit thì lưu lại thông tin mới (đã sửa) của bảo tàng
 				{
 					$do_id = $this->input->post('hdndo_id', TRUE);
-					$museum_id = $account['museum_id'];
+					$museum_id = $account['museum_info']['museum_id'];
 					$reason = $this->input->post('txtreason', TRUE);
 					$request_status = 0; //(0 = Pending, 1=Accepted,2=Deny)
 					$request_type = 0;
@@ -134,7 +134,7 @@
 							$target_id =  $data['target_object']['target_id']; // Lấy Target_ID của hiện vật mới thêm
 							$this->Model->insert('displayed_object', //insert dữ liệu vào bảng Displayed_Object
 								array(
-										'museum_id'			=>$account['museum_id'], 
+										'museum_id'			=>$account['museum_info']['museum_id'], 
 										'target_id'			=>$target_id, 
 										'name'				=>$name,
 										'text_description'	=>$description,
@@ -154,7 +154,7 @@
 								$do_id =  $data['displayed_object']['do_id']; 
 								$this->Model->insert('museum_request', //insert dữ liệu vào bảng museum_request
 								array(
-										'museum_id'			=>$account['museum_id'], 
+										'museum_id'			=>$account['museum_info']['museum_id'], 
 										'do_id'				=>$do_id,
 										'reason'			=>"Đã sẵn sàng kích hoạt",
 										'request_type'		=>2, //2 Active request
