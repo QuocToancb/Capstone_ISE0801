@@ -88,11 +88,11 @@ class Main extends CI_Controller
 	function logout()
 	{
 
-		// $this->session->unset_userdata('accountlog');
-		// $newdata['accountlog']='';
-		// $this->session->set_userdata($newdata);		
+		$this->load->driver('cache');
 		$this->session->sess_destroy();
-		header('Location: '.base_url().'index.php/main/login');
+		$this->cache->clean();
+		redirect('main/login'); 
+		ob_clean();
 	}
 	
 	//Nếu không có quyền thì điều hướng sang norole

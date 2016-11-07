@@ -14,7 +14,7 @@
 
 
 			$act = $this->uri->segment(3);
-			$id  = $this->uri->segment(4);
+			$id  = $this->uri->segment(4);			
 
 			switch ($act){
 				case 'view_museum_list_object':
