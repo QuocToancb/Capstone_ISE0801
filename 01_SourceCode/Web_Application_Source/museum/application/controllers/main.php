@@ -87,11 +87,12 @@ class Main extends CI_Controller
 	//phương thức đăng xuất
 	function logout()
 	{
-		$this->session->unset_userdata('accountlog');
-		$newdata['accountlog']='';
-		$this->session->set_userdata($newdata);
+
+		$this->load->driver('cache');
 		$this->session->sess_destroy();
-		header('Location: '.base_url().'index.php');
+		$this->cache->clean();
+		redirect('main/login'); 
+		ob_clean();
 	}
 	
 	//Nếu không có quyền thì điều hướng sang norole
@@ -99,28 +100,8 @@ class Main extends CI_Controller
 	{
 		$data=array();
 		$this->smarty->view('norole', $data);
-	}
-	//Công thức tính lương
-	function congthuctinhluong()
-	{	
-		$data['url']=base_url();
-		
-		$account = $this->session->userdata('accountlog');
-		$nhomnguoidung = $this->session->userdata('nhomnguoidungss');  		
-		if (is_array($account))
-		{//Nếu login rồi thì
-			$this->norole=$this->Model->checkRole($nhomnguoidung);
-			//Nếu không có quyền truy cập thì:	
-			if ($this->norole==false) 
-				header('Location: '.base_url().'index.php/main/norole');
-			else	//Nếu có quyền truy cập thì load index	
-			{
-				require_once('congthuctinhluong.php');
-			}
-		}
-		else //nếu chưa login thì chuyển qua trang login
-			header('Location: '.base_url().'index.php/main/login');
-	}
+	}		
+	
 	function user_museum_info()
 	{	
 		$data['url']=base_url();

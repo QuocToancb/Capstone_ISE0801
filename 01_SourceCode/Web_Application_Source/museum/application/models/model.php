@@ -15,8 +15,7 @@ Class Model extends CI_Model
 		if ($query->num_rows() > 0 ) //Nếu trả về dữ liệu (trong db có bản ghi của tk và mk đó)
 		{
 			$detail = $query->row_array();//trả về dữ liệu dạng mảng theo tên, chỉ trả về 1 dòng đầu tiên	
-			$temp = $this->selectAll('account_group', array('account_id'=>$detail['account_id']));
-			$this->session->set_userdata('nhomnguoidungss', $temp);	
+			$this->session->set_userdata('nhomnguoidungss', $detail['group_id']);
 			return $query->row_array(); //trả về dữ liệu dạng mảng theo tên, chỉ trả về 1 dòng đầu tiên
 				//return $query->result(); //trả về dữ liệu dạng mảng obj
 		}
@@ -89,7 +88,6 @@ Class Model extends CI_Model
 	{
 		$func=$this->uri->segment(2);
 		if ($func=='') $func='home';
-		$act='';
 		$act=$this->uri->segment(3);
 		if ($act=='' || is_numeric($act))
 		{
@@ -101,21 +99,15 @@ Class Model extends CI_Model
 					$nhomnguoidung = trim($nhomnguoidung, ','); //cắt bỏ dấu phẩy ở hai đầu
 				} else $nhomnguoidung = $group_id;
 				
-				$query=$this->db->query("SELECT * FROM group_role_action WHERE group_id IN ($nhomnguoidung) AND role_id IN (SELECT role_id FROM role WHERE role_function='$func')");			
+				$query=$this->db->query("SELECT * FROM group_role_action WHERE group_id IN ($group_id) AND role_id IN (SELECT role_id FROM role WHERE role_function='$func')");			
 				if ($query->num_rows() > 0) return true;
 		}				
 		else
-		{
-			if ( is_array($group_id))//Nếu người đăng nhập có nhiều quyền thì: ghép chuỗi rồi đưa vào câu truy vấn
-			{
-				$nhomnguoidung = '';
-				foreach ($group_id as $val)
-					$nhomnguoidung .= ','.$val['group_id'];
-				$nhomnguoidung = trim($nhomnguoidung, ','); //cắt bỏ dấu phẩy ở hai đầu
-				$query=$this->db->query("SELECT * FROM group_role_action WHERE group_id  IN ($nhomnguoidung) AND action_id IN (SELECT action_id FROM action WHERE action_title='$act') AND role_id IN (SELECT role_id FROM role WHERE role_function='$func')");
+		{		
+			$query=$this->db->query("SELECT * FROM group_role_action WHERE group_id  IN ($group_id) AND action_id IN (SELECT action_id FROM action WHERE action_title='$act') AND role_id IN (SELECT role_id FROM role WHERE role_function='$func')");
 		
-				if ($query->num_rows() > 0) return true;
-			}			
+			if ($query->num_rows() > 0) return true;
+						
 		}
 		
 		return false;

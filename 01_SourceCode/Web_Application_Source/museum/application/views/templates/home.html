@@ -89,22 +89,22 @@
 					<div class="sidebar-user">
 						<div class="category-content">
 							<div class="media">
-									{if isset($account) && isset($nhomnguoidung)}
+									{if isset($account) && $account.group_id == 1}
 									<div class="media-body">
-									<span class="media-heading text-semibold">TRANG QUẢN LÍ HỆ THỐNG</span>
+									<span class="media-heading text-semibold">TRANG QUẢN LÍ HỆ THỐNG ADMIN</span>
 										<div class="text-size-mini text-muted">
 											
-											<i class="icon-pin text-size-small"></i> &nbsp;<!-- {$title.street}, {$title.city} -->
+											 &nbsp;<!-- {$title.street}, {$title.city} -->
 											
 										</div>
 									</div>			
 									{else}
 										<a href="#" class="media-left"><img src="{$url}resource/assets/images/placeholder.jpg" class="img-circle img-sm" alt=""></a>
 										<div class="media-body">
-										<span class="media-heading text-semibold">TRANG QUẢN LÍ HỆ THỐNG </span>
+										<span class="media-heading text-semibold" style="text-transform: uppercase;">{if isset($museum_log)}{$museum_log.museum_name}{/if}</span>
 											<div class="text-size-mini text-muted">
 											
-											<i class="icon-pin text-size-small"></i> &nbsp;<!-- {$title.street}, {$title.city} -->
+											<i class="icon-pin text-size-small"></i> &nbsp;{if isset($museum_log)}{$museum_log.museum_street}, {$museum_log.museum_city}{/if}
 											
 											</div>
 										</div>	
