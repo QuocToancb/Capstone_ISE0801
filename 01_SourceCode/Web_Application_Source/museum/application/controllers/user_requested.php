@@ -4,6 +4,7 @@
 		$data['account']=$account['accountlog']; //đưa ra thông tin người dùng ta tầng view
 		$nhomnguoidung = $this->session->userdata('nhomnguoidungss'); //gán vào biến trung gian rồi đưa ra
 		$data['nhomnguoidung']=$this->session->userdata('nhomnguoidungss'); //đưa nhóm người dùng (quyền)ra
+		$data['museum_log']=$this->Model->selectOne('museum', array('account_id' =>$data['account']['account_id']));
 		$this->norole=$this->Model->checkRole($nhomnguoidung);
 		if ($this->norole==false) //Nếu không có quyền truy cập thì:
 			header('Location: '.base_url().'index.php/main/norole');

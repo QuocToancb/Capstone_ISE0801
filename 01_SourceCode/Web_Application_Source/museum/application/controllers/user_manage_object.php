@@ -4,6 +4,7 @@
 		$data['account']=$account['accountlog']; //đưa ra thông tin người dùng ta tầng view
 		$nhomnguoidung = $this->session->userdata('nhomnguoidungss'); //gán vào biến trung gian rồi đưa ra
 		$data['nhomnguoidung']=$this->session->userdata('nhomnguoidungss'); //đưa nhóm người dùng (quyền)ra
+		$data['museum_log']=$this->Model->selectOne('museum', array('account_id' =>$data['account']['account_id']));
 		$this->norole=$this->Model->checkRole($nhomnguoidung);
 		if ($this->norole==false) //Nếu không có quyền truy cập thì:
 			header('Location: '.base_url().'index.php/main/norole');
@@ -100,7 +101,6 @@
 						if ($data['ob_detail']['current_status'] != 0){
 							header('Location: '.base_url().'index.php/main/norole');
 						}else{
-						//echo 'SUA thong tin hien vat'; exit;
 							if (isset($_POST['btnUpdate']))//sua thong tin hien vat
 							{
 								$name = $this->input->post('txtObjectName', TRUE);
@@ -164,8 +164,6 @@
 								header('Location: '.$data['url'].'index.php/main/user_manage_object');
 								} // status la pendi
 							}
-
-
 						$data['temp']='User/User_Edit_Object.html';		
 						}				
 						break;
