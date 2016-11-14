@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Development\Android\vuforia-sdk-android-6-0-117\samples\VuforiaSamples-6-0-112 -Full - Split Render\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="22.0.1"
+        sha1="d71100b33227cd0ac8319dba32068c0dd51ae15d">
+        <dex dex="C:\Development\Android\vuforia-sdk-android-6-0-117\samples\VuforiaSamples-6-0-112 -Full - Split Render\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_70d7c55c0e49e8b47a039dba5ecc63d94478b93e\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Development\Android\vuforia-sdk-android-6-0-117\samples\VuforiaSamples-6-0-112 -Full - Split Render\app\build\intermediates\exploded-aar\com.android.volley\volley\1.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="22.0.1"
+        sha1="2cd4b982617e544728de0782d718a58ce1b06e3f">
+        <dex dex="C:\Development\Android\vuforia-sdk-android-6-0-117\samples\VuforiaSamples-6-0-112 -Full - Split Render\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.volley-volley-1.0.0_746baed8bb202398ce499719ce0f7ccf6bdd1b08\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Development\Android\vuforia-sdk-android-6-0-117\samples\VuforiaSamples-6-0-112 -Full - Split Render\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="22.0.1"
+        sha1="e34d79952a964f661757478426d2bfb41bb02735">
+        <dex dex="C:\Development\Android\vuforia-sdk-android-6-0-117\samples\VuforiaSamples-6-0-112 -Full - Split Render\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_fde0fc4bcd86d97d359ff51dcb0abfe3c190cfe6\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Development\Android\vuforia-sdk-android-6-0-117\build\java\vuforia\Vuforia.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="22.0.1"
+        sha1="68bf3aa0a0e9c14d708c2c6cdbd475aee6ca9dfe">
+        <dex dex="C:\Development\Android\vuforia-sdk-android-6-0-117\samples\VuforiaSamples-6-0-112 -Full - Split Render\app\build\intermediates\transforms\dex\debug\folders\1000\2\Vuforia_58c5a164b911b9c2c1a3bf6a921dc9e91a15cbae\classes.dex" />
+    </item>
+
+</items>

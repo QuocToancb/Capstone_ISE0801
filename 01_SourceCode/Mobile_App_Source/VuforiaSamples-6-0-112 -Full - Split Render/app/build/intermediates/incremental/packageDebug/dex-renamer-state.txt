@@ -1,0 +1,7 @@
+#Sun Nov 13 01:10:11 ICT 2016
+base.0=C\:\\Development\\Android\\vuforia-sdk-android-6-0-117\\samples\\VuforiaSamples-6-0-112 -Full - Split Render\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_fde0fc4bcd86d97d359ff51dcb0abfe3c190cfe6
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=C\:\\Development\\Android\\vuforia-sdk-android-6-0-117\\samples\\VuforiaSamples-6-0-112 -Full - Split Render\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_70d7c55c0e49e8b47a039dba5ecc63d94478b93e\\classes.dex
+base.1=C\:\\Development\\Android\\vuforia-sdk-android-6-0-117\\samples\\VuforiaSamples-6-0-112 -Full - Split Render\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_70d7c55c0e49e8b47a039dba5ecc63d94478b93e
+file.0=C\:\\Development\\Android\\vuforia-sdk-android-6-0-117\\samples\\VuforiaSamples-6-0-112 -Full - Split Render\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_fde0fc4bcd86d97d359ff51dcb0abfe3c190cfe6\\classes.dex

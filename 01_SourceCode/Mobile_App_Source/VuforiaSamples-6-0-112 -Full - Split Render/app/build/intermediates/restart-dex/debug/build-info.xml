@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<instant-run
+    abi="armeabi-v7a,armeabi"
+    api-level="21"
+    density="xxhdpi"
+    format="8"
+    plugin-version="2.2.2"
+    timestamp="747778971504"
+    token="845214893110269651"
+    verifier="FULL_BUILD_REQUESTED" >
+
+    <task
+        name="javac"
+        duration="1393" />
+    <task
+        name="instant-run-dex"
+        duration="0" />
+    <task
+        name="instant-run-transform"
+        duration="148" />
+    <task
+        name="verifier"
+        duration="2" />
+
+    <artifact
+        location="C:\Development\Android\vuforia-sdk-android-6-0-117\samples\VuforiaSamples-6-0-112 -Full - Split Render\app\build\outputs\apk\VuforiaSamples-6-0-112 -Full - Split Render-debug.apk"
+        type="MAIN" />
+
+    <build
+        timestamp="588621676049189"
+        verifier="FULL_BUILD_REQUESTED" >
+        <artifact
+            location="C:\Development\Android\vuforia-sdk-android-6-0-117\samples\VuforiaSamples-6-0-112 -Full - Split Render\app\build\outputs\apk\VuforiaSamples-6-0-112 -Full - Split Render-debug.apk"
+            type="MAIN" />
+    </build>
+
+</instant-run>
