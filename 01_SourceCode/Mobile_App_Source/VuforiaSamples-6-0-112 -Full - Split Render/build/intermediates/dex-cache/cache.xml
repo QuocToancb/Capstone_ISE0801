@@ -7,7 +7,7 @@
         jumboMode="true"
         optimize="true"
         revision="22.0.1"
-        sha1="d71100b33227cd0ac8319dba32068c0dd51ae15d">
+        sha1="dd14ec8541c40fa80583b3b75c2a87acec321099">
         <dex dex="C:\Development\Android\vuforia-sdk-android-6-0-117\samples\VuforiaSamples-6-0-112 -Full - Split Render\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_70d7c55c0e49e8b47a039dba5ecc63d94478b93e\classes.dex" />
     </item>
     <item
@@ -25,7 +25,7 @@
         jumboMode="true"
         optimize="true"
         revision="22.0.1"
-        sha1="e34d79952a964f661757478426d2bfb41bb02735">
+        sha1="90a115f3343cebbe3a2b1e6ac044ea9930a5c876">
         <dex dex="C:\Development\Android\vuforia-sdk-android-6-0-117\samples\VuforiaSamples-6-0-112 -Full - Split Render\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_fde0fc4bcd86d97d359ff51dcb0abfe3c190cfe6\classes.dex" />
     </item>
     <item

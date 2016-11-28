@@ -28,6 +28,9 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -36,8 +39,8 @@ import com.vuforia.CameraDevice;
 import com.vuforia.DataSet;
 import com.vuforia.HINT;
 import com.vuforia.ObjectTracker;
-import com.vuforia.STORAGE_TYPE;
 import com.vuforia.State;
+import com.vuforia.TargetFinder;
 import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
 import com.vuforia.Vuforia;
@@ -65,6 +68,22 @@ public class VideoPlayback extends Activity implements
     SampleApplicationSession vuforiaAppSession;
 
     Activity mActivity;
+
+    // These codes match the ones defined in TargetFinder in Vuforia.jar
+    static final int INIT_SUCCESS = 2;
+    static final int INIT_ERROR_NO_NETWORK_CONNECTION = -1;
+    static final int INIT_ERROR_SERVICE_NOT_AVAILABLE = -2;
+    static final int UPDATE_ERROR_AUTHORIZATION_FAILED = -1;
+    static final int UPDATE_ERROR_PROJECT_SUSPENDED = -2;
+    static final int UPDATE_ERROR_NO_NETWORK_CONNECTION = -3;
+    static final int UPDATE_ERROR_SERVICE_NOT_AVAILABLE = -4;
+    static final int UPDATE_ERROR_BAD_FRAME_QUALITY = -5;
+    static final int UPDATE_ERROR_UPDATE_SDK = -6;
+    static final int UPDATE_ERROR_TIMESTAMP_OUT_OF_RANGE = -7;
+    static final int UPDATE_ERROR_REQUEST_TIMEOUT = -8;
+
+    static final int HIDE_LOADING_DIALOG = 0;
+    static final int SHOW_LOADING_DIALOG = 1;
 
     // Helpers to detect events such as double tapping:
     private GestureDetector mGestureDetector = null;
@@ -113,11 +132,29 @@ public class VideoPlayback extends Activity implements
 
 
     //QuocToan
+    //Mykey
+//    private static final String kAccessKey = "c33bfc548a0f6d082e56bba1e69f5cde4d82b1c4";
+//    private static final String kSecretKey = "5b480bd1b978d4b0d24a0a55e0d86e8e3c899575";
+
+    boolean mFinderStarted = false;
+
+    private double mLastErrorTime;
     Button btnAudio;
     Button btnVideo;
     boolean isplaying = false;
+
+    // Error message handling:
+    private int mlastErrorCode = 0;
+    private int mInitErrorCode = 0;
+    private boolean mFinishActivityOnError;
+
     // Called when the activity first starts or the user navigates back
     // to an activity.
+
+    // declare scan line and its animation
+    private View scanLine;
+    private TranslateAnimation scanAnimation;
+
     protected void onCreate(Bundle savedInstanceState) {
 
         Log.d(LOGTAG, "onCreate");
@@ -155,7 +192,7 @@ public class VideoPlayback extends Activity implements
             mVideoPlayerHelper[i].setActivity(this);
         }
 
-        mMovieName[STONES] = "VideoPlayback/VuforiaSizzleReel_1.mp4";
+        //mMovieName[STONES] = "VideoPlayback/VuforiaSizzleReel_1.mp4";
         //mMovieName[CHIPS] = "VideoPlayback/VuforiaSizzleReel_2.mp4";
 
         // Set the double tap listener:
@@ -224,6 +261,7 @@ public class VideoPlayback extends Activity implements
                 return isSingleTapHandled;
             }
         });
+        Log.d("AAAA", "Ket thuc oncreate");
     }
 
 
@@ -350,6 +388,9 @@ public class VideoPlayback extends Activity implements
         } catch (SampleApplicationException e) {
             Log.e(LOGTAG, e.getString());
         }
+        if (mediaPlayer != null) {
+            stop();
+        }
     }
 
 
@@ -405,7 +446,7 @@ public class VideoPlayback extends Activity implements
 
 
     private void startLoadingAnimation() {
-        mUILayout = (RelativeLayout) View.inflate(this, R.layout.camera_overlay,
+        mUILayout = (RelativeLayout) View.inflate(this, R.layout.camera_overlay_with_scanline,
                 null);
 
         mUILayout.setVisibility(View.VISIBLE);
@@ -422,9 +463,9 @@ public class VideoPlayback extends Activity implements
             @Override
             public void onClick(View v) {
 
-                if(check!= 0){
+                if (check != 0) {
                     check = 0;
-                }else{
+                } else {
                     pause();
                 }
             }
@@ -439,6 +480,18 @@ public class VideoPlayback extends Activity implements
         // Shows the loading indicator at start
         loadingDialogHandler
                 .sendEmptyMessage(LoadingDialogHandler.SHOW_LOADING_DIALOG);
+
+        scanLine = mUILayout.findViewById(R.id.scan_line);
+        scanLine.setVisibility(View.GONE);
+        scanAnimation = new TranslateAnimation(
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 1.0f);
+        scanAnimation.setDuration(4000);
+        scanAnimation.setRepeatCount(-1);
+        scanAnimation.setRepeatMode(Animation.REVERSE);
+        scanAnimation.setInterpolator(new LinearInterpolator());
 
         // Adds the inflated layout to the view
         addContentView(mUILayout, new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -478,6 +531,51 @@ public class VideoPlayback extends Activity implements
 
     }
 
+    // Returns the error message for each error code
+    private String getStatusDescString(int code) {
+        if (code == UPDATE_ERROR_AUTHORIZATION_FAILED)
+            return getString(R.string.UPDATE_ERROR_AUTHORIZATION_FAILED_DESC);
+        if (code == UPDATE_ERROR_PROJECT_SUSPENDED)
+            return getString(R.string.UPDATE_ERROR_PROJECT_SUSPENDED_DESC);
+        if (code == UPDATE_ERROR_NO_NETWORK_CONNECTION)
+            return getString(R.string.UPDATE_ERROR_NO_NETWORK_CONNECTION_DESC);
+        if (code == UPDATE_ERROR_SERVICE_NOT_AVAILABLE)
+            return getString(R.string.UPDATE_ERROR_SERVICE_NOT_AVAILABLE_DESC);
+        if (code == UPDATE_ERROR_UPDATE_SDK)
+            return getString(R.string.UPDATE_ERROR_UPDATE_SDK_DESC);
+        if (code == UPDATE_ERROR_TIMESTAMP_OUT_OF_RANGE)
+            return getString(R.string.UPDATE_ERROR_TIMESTAMP_OUT_OF_RANGE_DESC);
+        if (code == UPDATE_ERROR_REQUEST_TIMEOUT)
+            return getString(R.string.UPDATE_ERROR_REQUEST_TIMEOUT_DESC);
+        if (code == UPDATE_ERROR_BAD_FRAME_QUALITY)
+            return getString(R.string.UPDATE_ERROR_BAD_FRAME_QUALITY_DESC);
+        else {
+            return getString(R.string.UPDATE_ERROR_UNKNOWN_DESC);
+        }
+    }
+
+    // Returns the error message for each error code
+    private String getStatusTitleString(int code) {
+        if (code == UPDATE_ERROR_AUTHORIZATION_FAILED)
+            return getString(R.string.UPDATE_ERROR_AUTHORIZATION_FAILED_TITLE);
+        if (code == UPDATE_ERROR_PROJECT_SUSPENDED)
+            return getString(R.string.UPDATE_ERROR_PROJECT_SUSPENDED_TITLE);
+        if (code == UPDATE_ERROR_NO_NETWORK_CONNECTION)
+            return getString(R.string.UPDATE_ERROR_NO_NETWORK_CONNECTION_TITLE);
+        if (code == UPDATE_ERROR_SERVICE_NOT_AVAILABLE)
+            return getString(R.string.UPDATE_ERROR_SERVICE_NOT_AVAILABLE_TITLE);
+        if (code == UPDATE_ERROR_UPDATE_SDK)
+            return getString(R.string.UPDATE_ERROR_UPDATE_SDK_TITLE);
+        if (code == UPDATE_ERROR_TIMESTAMP_OUT_OF_RANGE)
+            return getString(R.string.UPDATE_ERROR_TIMESTAMP_OUT_OF_RANGE_TITLE);
+        if (code == UPDATE_ERROR_REQUEST_TIMEOUT)
+            return getString(R.string.UPDATE_ERROR_REQUEST_TIMEOUT_TITLE);
+        if (code == UPDATE_ERROR_BAD_FRAME_QUALITY)
+            return getString(R.string.UPDATE_ERROR_BAD_FRAME_QUALITY_TITLE);
+        else {
+            return getString(R.string.UPDATE_ERROR_UNKNOWN_TITLE);
+        }
+    }
 
     // We do not handle the touch event here, we just forward it to the
     // gesture detector
@@ -501,8 +599,7 @@ public class VideoPlayback extends Activity implements
 
         // Initialize the image tracker:
         TrackerManager trackerManager = TrackerManager.getInstance();
-        Tracker tracker = trackerManager.initTracker(ObjectTracker
-                .getClassType());
+        Tracker tracker = trackerManager.initTracker(ObjectTracker.getClassType());
         if (tracker == null) {
             Log.d(LOGTAG, "Failed to initialize ObjectTracker.");
             result = false;
@@ -514,7 +611,7 @@ public class VideoPlayback extends Activity implements
 
     @Override
     public boolean doLoadTrackersData() {
-        // Get the image tracker:
+        // Get the object tracker:
         TrackerManager trackerManager = TrackerManager.getInstance();
         ObjectTracker objectTracker = (ObjectTracker) trackerManager
                 .getTracker(ObjectTracker.getClassType());
@@ -525,28 +622,55 @@ public class VideoPlayback extends Activity implements
             return false;
         }
 
-        // Create the data sets:
-        dataSetStonesAndChips = objectTracker.createDataSet();
-        if (dataSetStonesAndChips == null) {
-            Log.d(LOGTAG, "Failed to create a new tracking data.");
+
+        // Initialize target finder:
+        TargetFinder targetFinder = objectTracker.getTargetFinder();
+
+        // Start initialization:
+        String kAccessKey = "c33bfc548a0f6d082e56bba1e69f5cde4d82b1c4";
+        String kSecretKey = "5b480bd1b978d4b0d24a0a55e0d86e8e3c899575";
+        if (targetFinder.startInit(kAccessKey, kSecretKey)) {
+            targetFinder.waitUntilInitFinished();
+        }
+
+
+        int resultCode = targetFinder.getInitState();
+        if (resultCode != TargetFinder.INIT_SUCCESS) {
+            if (resultCode == TargetFinder.INIT_ERROR_NO_NETWORK_CONNECTION) {
+                mInitErrorCode = UPDATE_ERROR_NO_NETWORK_CONNECTION;
+            } else {
+                mInitErrorCode = UPDATE_ERROR_SERVICE_NOT_AVAILABLE;
+            }
+
+            Log.e(LOGTAG, "Failed to initialize target finder.");
             return false;
         }
 
-        // Load the data sets:
-        if (!dataSetStonesAndChips.load("StonesAndChips.xml",
-                STORAGE_TYPE.STORAGE_APPRESOURCE)) {
-            Log.d(LOGTAG, "Failed to load data set.");
-            return false;
-        }
-
-        // Activate the data set:
-        if (!objectTracker.activateDataSet(dataSetStonesAndChips)) {
-            Log.d(LOGTAG, "Failed to activate data set.");
-            return false;
-        }
-
-        Log.d(LOGTAG, "Successfully loaded and activated data set.");
         return true;
+
+////         Create the data sets:
+//        dataSetStonesAndChips = objectTracker.createDataSet();
+//        if (dataSetStonesAndChips == null) {
+//            Log.d(LOGTAG, "Failed to create a new tracking data.");
+//            return false;
+//        }
+//
+//        // Load the data sets:
+//        if (!dataSetStonesAndChips.load("StonesAndChips.xml",
+//                STORAGE_TYPE.STORAGE_APPRESOURCE)) {
+//            Log.d(LOGTAG, "Failed to load data set.");
+//            return false;
+//        }
+//
+//        // Activate the data set:
+//        if (!objectTracker.activateDataSet(dataSetStonesAndChips)) {
+//            Log.d(LOGTAG, "Failed to activate data set.");
+//            return false;
+//        }
+//
+//        Log.d(LOGTAG, "Successfully loaded and activated data set.");
+//
+//        return true;
     }
 
 
@@ -555,13 +679,21 @@ public class VideoPlayback extends Activity implements
         // Indicate if the trackers were started correctly
         boolean result = true;
 
-        Tracker objectTracker = TrackerManager.getInstance().getTracker(
-                ObjectTracker.getClassType());
-        if (objectTracker != null) {
-            objectTracker.start();
-            Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 1);
-        } else
-            result = false;
+        TrackerManager trackerManager = TrackerManager.getInstance();
+        ObjectTracker objectTracker = (ObjectTracker) trackerManager
+                .getTracker(ObjectTracker.getClassType());
+        objectTracker.start();
+
+        // Start cloud based recognition if we are in scanning mode:
+        TargetFinder targetFinder = objectTracker.getTargetFinder();
+        targetFinder.startRecognition();
+        scanlineStart();
+        mFinderStarted = true;
+
+//        Tracker objectTracker = TrackerManager.getInstance().getTracker(
+//                ObjectTracker.getClassType());
+        objectTracker.start();
+        Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 1);
 
         return result;
     }
@@ -572,50 +704,71 @@ public class VideoPlayback extends Activity implements
         // Indicate if the trackers were stopped correctly
         boolean result = true;
 
-        Tracker objectTracker = TrackerManager.getInstance().getTracker(
-                ObjectTracker.getClassType());
-        if (objectTracker != null)
+        TrackerManager trackerManager = TrackerManager.getInstance();
+        ObjectTracker objectTracker = (ObjectTracker) trackerManager
+                .getTracker(ObjectTracker.getClassType());
+        if (objectTracker != null) {
             objectTracker.stop();
-        else
-            result = false;
 
+            // Stop cloud based recognition:
+            TargetFinder targetFinder = objectTracker.getTargetFinder();
+            targetFinder.stop();
+            scanlineStop();
+            mFinderStarted = false;
+            // Clears the trackables
+            targetFinder.clearTrackables();
+        } else {
+
+
+            result = false;
+        }
         return result;
     }
 
 
     @Override
     public boolean doUnloadTrackersData() {
-        // Indicate if the trackers were unloaded correctly
-        boolean result = true;
+//            // Indicate if the trackers were unloaded correctly
+//            boolean result = true;
+//
+//            // Get the image tracker:
+//            TrackerManager trackerManager = TrackerManager.getInstance();
+//            ObjectTracker objectTracker = (ObjectTracker) trackerManager
+//                    .getTracker(ObjectTracker.getClassType());
+//            if (objectTracker == null) {
+//                Log.d(
+//                        LOGTAG,
+//                        "Failed to destroy the tracking data set because the ObjectTracker has not been initialized.");
+//                return false;
+//            }
+//
+//            if (dataSetStonesAndChips != null) {
+//                if (objectTracker.getActiveDataSet() == dataSetStonesAndChips
+//                        && !objectTracker.deactivateDataSet(dataSetStonesAndChips)) {
+//                        && !objectTracker.deactivateDataSet(dataSetStonesAndChips)) {
+//                    Log.d(
+//                            LOGTAG,
+//                            "Failed to destroy the tracking data set StonesAndChips because the data set could not be deactivated.");
+//                    result = false;
+//                } else if (!objectTracker.destroyDataSet(dataSetStonesAndChips)) {
+//                    Log.d(LOGTAG,
+//                            "Failed to destroy the tracking data set StonesAndChips.");
+//                    result = false;
+//                }
+//+3
 
-        // Get the image tracker:
+//                dataSetStonesAndChips = null;
+//            }
+//
+//            return result;
+        // Deinitialize Cloud Reco
+        // Get the object tracker:
         TrackerManager trackerManager = TrackerManager.getInstance();
         ObjectTracker objectTracker = (ObjectTracker) trackerManager
                 .getTracker(ObjectTracker.getClassType());
-        if (objectTracker == null) {
-            Log.d(
-                    LOGTAG,
-                    "Failed to destroy the tracking data set because the ObjectTracker has not been initialized.");
-            return false;
-        }
-
-        if (dataSetStonesAndChips != null) {
-            if (objectTracker.getActiveDataSet() == dataSetStonesAndChips
-                    && !objectTracker.deactivateDataSet(dataSetStonesAndChips)) {
-                Log.d(
-                        LOGTAG,
-                        "Failed to destroy the tracking data set StonesAndChips because the data set could not be deactivated.");
-                result = false;
-            } else if (!objectTracker.destroyDataSet(dataSetStonesAndChips)) {
-                Log.d(LOGTAG,
-                        "Failed to destroy the tracking data set StonesAndChips.");
-                result = false;
-            }
-
-            dataSetStonesAndChips = null;
-        }
-
-        return result;
+        TargetFinder finder = objectTracker.getTargetFinder();
+        finder.deinit();
+        return true;
     }
 
 
@@ -669,19 +822,66 @@ public class VideoPlayback extends Activity implements
             if (!result)
                 Log.e(LOGTAG, "Unable to enable continuous autofocus");
 
-            mSampleAppMenu = new SampleAppMenu(this, this, "Video Playback",
-                    mGlView, mUILayout, null);
-            setSampleAppMenuSettings();
+//            Create Menu
+//            mSampleAppMenu = new SampleAppMenu(this, this, "Video Playback",
+//                    mGlView, mUILayout, null);
+//            setSampleAppMenuSettings();
 
             mIsInitialized = true;
 
         } else {
             Log.e(LOGTAG, exception.getString());
+            if (mInitErrorCode != 0) {
+                showErrorMessage(mInitErrorCode, 10, true);
+            } else {
+                showInitializationErrorMessage(exception.getString());
+            }
             showInitializationErrorMessage(exception.getString());
         }
 
     }
 
+    // Shows error messages as System dialogs
+
+    public void showErrorMessage(int errorCode, double errorTime, boolean finishActivityOnError) {
+        if (errorTime < (mLastErrorTime + 5.0) || errorCode == mlastErrorCode)
+            return;
+
+        mlastErrorCode = errorCode;
+        mFinishActivityOnError = finishActivityOnError;
+
+        runOnUiThread(new Runnable() {
+            public void run() {
+                if (mErrorDialog != null) {
+                    mErrorDialog.dismiss();
+                }
+
+                // Generates an Alert Dialog to show the error message
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        VideoPlayback.this);
+                builder
+                        .setMessage(
+                                getStatusDescString(VideoPlayback.this.mlastErrorCode))
+                        .setTitle(
+                                getStatusTitleString(VideoPlayback.this.mlastErrorCode))
+                        .setCancelable(false)
+                        .setIcon(0)
+                        .setPositiveButton(getString(R.string.button_OK),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        if (mFinishActivityOnError) {
+                                            finish();
+                                        } else {
+                                            dialog.dismiss();
+                                        }
+                                    }
+                                });
+
+                mErrorDialog = builder.create();
+                mErrorDialog.show();
+            }
+        });
+    }
 
     // Shows initialization error messages as System dialogs
     public void showInitializationErrorMessage(String message) {
@@ -713,9 +913,46 @@ public class VideoPlayback extends Activity implements
         });
     }
 
+    public void startFinderIfStopped() {
+        if (!mFinderStarted) {
+            mFinderStarted = true;
+
+            // Get the object tracker:
+            TrackerManager trackerManager = TrackerManager.getInstance();
+            ObjectTracker objectTracker = (ObjectTracker) trackerManager
+                    .getTracker(ObjectTracker.getClassType());
+
+            // Initialize target finder:
+            TargetFinder targetFinder = objectTracker.getTargetFinder();
+
+            targetFinder.clearTrackables();
+            targetFinder.startRecognition();
+            scanlineStart();
+        }
+    }
+
+
+    public void stopFinderIfStarted() {
+        if (mFinderStarted) {
+            mFinderStarted = false;
+
+            // Get the object tracker:
+            TrackerManager trackerManager = TrackerManager.getInstance();
+            ObjectTracker objectTracker = (ObjectTracker) trackerManager
+                    .getTracker(ObjectTracker.getClassType());
+
+            // Initialize target finder:
+            TargetFinder targetFinder = objectTracker.getTargetFinder();
+
+            targetFinder.stop();
+            scanlineStop();
+        }
+    }
+
 
     @Override
     public void onVuforiaUpdate(State state) {
+
     }
 
     final private static int CMD_BACK = -1;
@@ -762,10 +999,29 @@ public class VideoPlayback extends Activity implements
                     }
                 }
                 break;
-
         }
 
         return result;
+    }
+
+    private void scanlineStart() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                scanLine.setVisibility(View.VISIBLE);
+                scanLine.setAnimation(scanAnimation);
+            }
+        });
+    }
+
+    private void scanlineStop() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                scanLine.setVisibility(View.GONE);
+                scanLine.clearAnimation();
+            }
+        });
     }
 
     public void toastMe(String mess) {
@@ -773,13 +1029,13 @@ public class VideoPlayback extends Activity implements
     }
 
     public void targetLost() {
-        try{
-            if(mediaPlayer != null && mediaPlayer.isPlaying()){
+        try {
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 btnAudio.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 btnAudio.setVisibility(View.INVISIBLE);
             }
-        }catch (IllegalStateException ex){
+        } catch (IllegalStateException ex) {
             btnAudio.setVisibility(View.INVISIBLE);
         }
 
@@ -795,7 +1051,6 @@ public class VideoPlayback extends Activity implements
     }
 
     public void play(String u) {
-        //String url = "http://org2.s1.mp3.zdn.vn/c4d8fe9b5cdfb581ecce/8552917280299845060?key=ju_y-emWJNGo6HypGf84kQ&expires=1477704328&filename=Nguoi%20Va%20Ta%20-%20Rhymastic%20Thanh%20Huyen.mp3"; // your URL here
         String url = u;
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -806,7 +1061,7 @@ public class VideoPlayback extends Activity implements
 
             Toast.makeText(this, String.valueOf(mediaPlayer.isPlaying()), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Log.d("ExceptionME", e.getMessage());
+            Log.d("ExceptionME", e.getMessage() + "");
         }
         mediaPlayer.start();
     }
@@ -822,7 +1077,9 @@ public class VideoPlayback extends Activity implements
             isplaying = false;
         } else if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
             mediaPlayer.start();
+
         }
     }
+
 
 }

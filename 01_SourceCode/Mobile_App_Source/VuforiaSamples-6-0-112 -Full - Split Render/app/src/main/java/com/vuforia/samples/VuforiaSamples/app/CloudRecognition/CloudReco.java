@@ -17,10 +17,10 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -30,11 +30,10 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.vuforia.CameraDevice;
-import com.vuforia.DataSet;
 import com.vuforia.ObjectTracker;
 import com.vuforia.State;
 import com.vuforia.TargetFinder;
@@ -56,15 +55,13 @@ import com.vuforia.samples.VuforiaSamples.ui.SampleAppMenu.SampleAppMenuInterfac
 
 import java.util.Vector;
 
+
 // The main activity for the CloudReco sample. 
 public class CloudReco extends Activity implements SampleApplicationControl,
         SampleAppMenuInterface {
-    MediaPlayer mediaPlayer;
     private static final String LOGTAG = "CloudReco";
 
     SampleApplicationSession vuforiaAppSession;
-
-    Activity mActivity;
 
     // These codes match the ones defined in TargetFinder in Vuforia.jar
     static final int INIT_SUCCESS = 2;
@@ -82,6 +79,8 @@ public class CloudReco extends Activity implements SampleApplicationControl,
     static final int HIDE_LOADING_DIALOG = 0;
     static final int SHOW_LOADING_DIALOG = 1;
 
+    public static final int NUM_TARGETS = 1;
+
     // Our OpenGL view:
     private SampleApplicationGLView mGlView;
 
@@ -97,19 +96,11 @@ public class CloudReco extends Activity implements SampleApplicationControl,
     // The textures we will use for rendering:
     private Vector<Texture> mTextures;
 
-    //Key vuforia
-//    private static final String kAccessKey = "f12bab511d1620e10b30232147367265cbf94954";
-//    private static final String kSecretKey = "988ef2f1bd3f400738a91a6097c9e238ef96d73a";
-
-    //Mykey
-    private static final String kAccessKey = "c33bfc548a0f6d082e56bba1e69f5cde4d82b1c4";
-    private static final String kSecretKey = "5b480bd1b978d4b0d24a0a55e0d86e8e3c899575";
-
+    private static final String kAccessKey = "94e96c07220b46ccee8a5d9f770ffe1aa2384bba";
+    private static final String kSecretKey = "87be906007bfb56178dbcfcc52265b314d30ef2c";
 
     // View overlays to be displayed in the Augmented View
     private RelativeLayout mUILayout;
-
-    private boolean mPlayFullscreenVideo = false;
 
     // Error message handling:
     private int mlastErrorCode = 0;
@@ -120,19 +111,6 @@ public class CloudReco extends Activity implements SampleApplicationControl,
     private AlertDialog mErrorDialog;
 
     private GestureDetector mGestureDetector;
-    private GestureDetector.SimpleOnGestureListener mSimpleListener = null;
-
-    // Movie for the Targets:
-    public static final int NUM_TARGETS = 2;
-    private int mSeekPosition[] = null;
-    private boolean mWasPlaying[] = null;
-    private String mMovieName[] = null;
-
-    // A boolean to indicate whether we come from full screen:
-    private boolean mReturningFromFullScreen = false;
-
-
-    DataSet dataSetStonesAndChips = null;
 
     private LoadingDialogHandler loadingDialogHandler = new LoadingDialogHandler(
             this);
@@ -144,32 +122,44 @@ public class CloudReco extends Activity implements SampleApplicationControl,
     private double mLastErrorTime;
 
     boolean mIsDroidDevice = false;
-    boolean mIsInitialized = false;
-    boolean isplaying = false;
+
+    MediaPlayer mediaPlayer;
+
+    Button btnAudio;
+    Button btnVideo;
+    int museumID;
+
+    AudioPlayControler audioPlayControler;
+    boolean isMusicJustPlay = false;
+    DataObject savedObject;
+
 
     // Called when the activity first starts or needs to be recreated after
     // resuming the application or a configuration change.
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(LOGTAG, "onCreate");
         super.onCreate(savedInstanceState);
-
+        museumID = getIntent().getIntExtra("MuseumID", -1);
         vuforiaAppSession = new SampleApplicationSession(this);
 
         startLoadingAnimation();
-
         vuforiaAppSession
                 .initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // Creates the GestureDetector listener for processing double tap
         mGestureDetector = new GestureDetector(this, new GestureListener());
 
-
-        // Load any sample specific textures:
         mTextures = new Vector<Texture>();
         loadTextures();
+        mediaPlayer = new MediaPlayer();
+        audioPlayControler = new AudioPlayControler(mediaPlayer);
+        savedObject = new DataObject();
+
         mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(
                 "droid");
+
     }
 
     // Process Single Tap event to trigger autofocus
@@ -184,26 +174,20 @@ public class CloudReco extends Activity implements SampleApplicationControl,
             return true;
         }
 
+
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             // Generates a Handler to trigger autofocus
             // after 1 second
             autofocusHandler.postDelayed(new Runnable() {
                 public void run() {
+                    boolean result = CameraDevice.getInstance().setFocusMode(
+                            CameraDevice.FOCUS_MODE.FOCUS_MODE_TRIGGERAUTO);
 
-                    if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                        mediaPlayer.pause();
-                        isplaying = false;
-                    } else if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-                        mediaPlayer.start();
-                    }
-//                    boolean result = CameraDevice.getInstance().setFocusMode(
-//                            CameraDevice.FOCUS_MODE.FOCUS_MODE_TRIGGERAUTO);
-
-//                    if (!result)
-//                        Log.e("SingleTapUp", "Unable to trigger focus");
+                    if (!result)
+                        Log.e("SingleTapUp", "Unable to trigger focus");
                 }
-            }, 1L);
+            }, 1000L);
 
             return true;
         }
@@ -213,17 +197,7 @@ public class CloudReco extends Activity implements SampleApplicationControl,
     // We want to load specific textures from the APK, which we will later use
     // for rendering.
     private void loadTextures() {
-        mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",
-                getAssets()));
-        mTextures.add(Texture.loadTextureFromApk(
-                "VideoPlayback/VuforiaSizzleReel_1.png", getAssets()));
-        mTextures.add(Texture.loadTextureFromApk(
-                "VideoPlayback/VuforiaSizzleReel_2.png", getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("VideoPlayback/play.png",
-                getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("VideoPlayback/busy.png",
-                getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("VideoPlayback/error.png",
+        mTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png",
                 getAssets()));
     }
 
@@ -233,7 +207,6 @@ public class CloudReco extends Activity implements SampleApplicationControl,
     protected void onResume() {
         Log.d(LOGTAG, "onResume");
         super.onResume();
-
         // This is needed for some Droid devices to force portrait
         if (mIsDroidDevice) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -252,39 +225,8 @@ public class CloudReco extends Activity implements SampleApplicationControl,
             mGlView.onResume();
         }
 
-
     }
 
-
-    // Called when returning from the full screen player
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == 1)
-        {
-
-            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-            if (resultCode == RESULT_OK)
-            {
-                // The following values are used to indicate the position in
-                // which the video was being played and whether it was being
-                // played or not:
-                String movieBeingPlayed = data.getStringExtra("movieName");
-                mReturningFromFullScreen = true;
-
-                // Find the movie that was being played full screen
-                for (int i = 0; i < NUM_TARGETS; i++)
-                {
-                    if (movieBeingPlayed.compareTo(mMovieName[i]) == 0)
-                    {
-                        mSeekPosition[i] = data.getIntExtra(
-                                "currentSeekPosition", 0);
-                        mWasPlaying[i] = false;
-                    }
-                }
-            }
-        }
-    }
 
     // Callback for configuration changes the activity handles itself
     @Override
@@ -313,10 +255,8 @@ public class CloudReco extends Activity implements SampleApplicationControl,
             mGlView.setVisibility(View.INVISIBLE);
             mGlView.onPause();
         }
-        if (mediaPlayer != null) {
-            stop();
-        }
-
+        audioPlayControler.pauseIfPlaying();
+        setButtonInvisible();
     }
 
 
@@ -326,24 +266,14 @@ public class CloudReco extends Activity implements SampleApplicationControl,
         Log.d(LOGTAG, "onDestroy");
         super.onDestroy();
 
-
-
         try {
             vuforiaAppSession.stopAR();
         } catch (SampleApplicationException e) {
             Log.e(LOGTAG, e.getString());
         }
 
-        // Unload texture:
-        mTextures.clear();
-        mTextures = null;
-
         System.gc();
     }
-
-    // Pause all movies except one
-    // if the value of 'except' is -1 then
-    // do a blanket pause
 
 
     public void deinitCloudReco() {
@@ -364,7 +294,6 @@ public class CloudReco extends Activity implements SampleApplicationControl,
     }
 
 
-
     private void startLoadingAnimation() {
         // Inflates the Overlay Layout to be displayed above the Camera View
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -377,6 +306,38 @@ public class CloudReco extends Activity implements SampleApplicationControl,
         // By default
         loadingDialogHandler.mLoadingDialogContainer = mUILayout
                 .findViewById(R.id.loading_indicator);
+
+        //QuocToan
+        btnAudio = (Button) mUILayout.findViewById(R.id.btnAudio);
+        btnVideo = (Button) mUILayout.findViewById(R.id.btnVideo);
+        btnAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (audioPlayControler.getMediaPlayer() == null) {
+                    audioPlayControler.playNew(savedObject.getAudioLink());
+                } else if (audioPlayControler.isPlaying()) {
+                    audioPlayControler.pauseIfPlaying();
+                } else if (audioPlayControler.isPause()) {
+                    audioPlayControler.playNew(savedObject.getAudioLink());
+                }
+            }
+        });
+        btnVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mPlayerHelperActivityIntent = new Intent(getApplicationContext(), FullscreenPlayback.class);
+                mPlayerHelperActivityIntent
+                        .setAction(Intent.ACTION_VIEW);
+                mPlayerHelperActivityIntent.putExtra(
+                        "shouldPlayImmediately", true);
+                mPlayerHelperActivityIntent.putExtra("currentSeekPosition",
+                        0);
+                mPlayerHelperActivityIntent.putExtra("requestedOrientation",
+                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                startActivityForResult(mPlayerHelperActivityIntent, 1);
+            }
+        });
+
         loadingDialogHandler.mLoadingDialogContainer
                 .setVisibility(View.VISIBLE);
 
@@ -408,6 +369,7 @@ public class CloudReco extends Activity implements SampleApplicationControl,
         // Initialize the GLView with proper flags
         mGlView = new SampleApplicationGLView(this);
         mGlView.init(translucent, depthSize, stencilSize);
+
         // Setups the Renderer of the GLView
         mRenderer = new CloudRecoRenderer(vuforiaAppSession, this);
         mRenderer.setTextures(mTextures);
@@ -552,6 +514,10 @@ public class CloudReco extends Activity implements SampleApplicationControl,
             targetFinder.clearTrackables();
             targetFinder.startRecognition();
             scanlineStart();
+
+            //Manager Button visible
+            targetLost();
+
         }
     }
 
@@ -570,6 +536,9 @@ public class CloudReco extends Activity implements SampleApplicationControl,
 
             targetFinder.stop();
             scanlineStop();
+
+            //Display button when targetFound
+            targetFound();
         }
     }
 
@@ -582,6 +551,7 @@ public class CloudReco extends Activity implements SampleApplicationControl,
 
         return mGestureDetector.onTouchEvent(event);
     }
+
 
     @Override
     public boolean doLoadTrackersData() {
@@ -655,9 +625,9 @@ public class CloudReco extends Activity implements SampleApplicationControl,
 
             mUILayout.setBackgroundColor(Color.TRANSPARENT);
 
-//            mSampleAppMenu = new SampleAppMenu(this, this, "Cloud Reco",
-//                    mGlView, mUILayout, null);
-            //setSampleAppMenuSettings();
+            mSampleAppMenu = new SampleAppMenu(this, this, "Cloud Reco",
+                    mGlView, mUILayout, null);
+            setSampleAppMenuSettings();
 
         } else {
             Log.e(LOGTAG, exception.getString());
@@ -885,34 +855,52 @@ public class CloudReco extends Activity implements SampleApplicationControl,
         });
     }
 
-    public void play(String u) {
-        //String url = "http://org2.s1.mp3.zdn.vn/c4d8fe9b5cdfb581ecce/8552917280299845060?key=ju_y-emWJNGo6HypGf84kQ&expires=1477704328&filename=Nguoi%20Va%20Ta%20-%20Rhymastic%20Thanh%20Huyen.mp3"; // your URL here
-        String url = u;
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    public void targetLost() {
+        Message msg1 = handlerButtonDisplayer.obtainMessage();
+        msg1.arg1 = 0;
+        handlerButtonDisplayer.sendMessage(msg1);
+
+    }
+
+    public void targetFound() {
+        Message msg1 = handlerButtonDisplayer.obtainMessage();
+        msg1.arg1 = 1;
+        handlerButtonDisplayer.sendMessage(msg1);
+    }
+
+    public void setButtonVisible() {
+        btnAudio.setVisibility(View.VISIBLE);
+        btnVideo.setVisibility(View.VISIBLE);
+    }
+
+    public void setButtonInvisible() {
         try {
-            mediaPlayer.setDataSource(url);
-
-            mediaPlayer.prepare(); // might take long! (for buffering, etc)
-
-            Toast.makeText(this, String.valueOf(mediaPlayer.isPlaying()), Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Log.d("ExceptionME", e.getMessage());
+            if (audioPlayControler.isPlaying()) {
+                btnAudio.setVisibility(View.VISIBLE);
+            } else {
+                btnAudio.setVisibility(View.INVISIBLE);
+            }
+        } catch (IllegalStateException ex) {
+            btnAudio.setVisibility(View.INVISIBLE);
         }
-        mediaPlayer.start();
+
+        btnVideo.setVisibility(View.INVISIBLE);
     }
 
-    public void stop() {
-        if (mediaPlayer != null)
-            mediaPlayer.release();
-    }
 
-    public boolean isPlay() {
-        if (mediaPlayer != null) {
-            return mediaPlayer.isPlaying();
+    private final Handler handlerButtonDisplayer = new Handler() {
+        public void handleMessage(Message msg) {
+            //targetFound
+            if (msg.arg1 == 0) {
+                setButtonInvisible();
+            } else if (msg.arg1 == 1)
+            //targetLost
+            {
+                setButtonVisible();
+            }
+
         }
-        return false;
-    }
+    };
 
 
 }

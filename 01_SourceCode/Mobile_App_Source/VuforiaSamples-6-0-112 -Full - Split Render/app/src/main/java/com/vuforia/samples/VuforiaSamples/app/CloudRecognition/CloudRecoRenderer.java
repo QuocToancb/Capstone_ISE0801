@@ -11,13 +11,16 @@ package com.vuforia.samples.VuforiaSamples.app.CloudRecognition;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
 import android.util.Log;
 
-import com.vuforia.Matrix44F;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.vuforia.Renderer;
 import com.vuforia.State;
-import com.vuforia.Tool;
 import com.vuforia.TrackableResult;
 import com.vuforia.VIDEO_BACKGROUND_REFLECTION;
 import com.vuforia.Vuforia;
@@ -26,6 +29,10 @@ import com.vuforia.samples.SampleApplication.utils.CubeShaders;
 import com.vuforia.samples.SampleApplication.utils.SampleUtils;
 import com.vuforia.samples.SampleApplication.utils.Teapot;
 import com.vuforia.samples.SampleApplication.utils.Texture;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Vector;
 
@@ -53,13 +60,15 @@ public class CloudRecoRenderer implements GLSurfaceView.Renderer {
 
     //Thread to play music when a target founded
     Thread th;
+    final RequestQueue queue;
 
-
-    String nameTarget;
+    boolean isGettingData = false;
+    int countRequest = 0;
 
     public CloudRecoRenderer(SampleApplicationSession session, CloudReco activity) {
         vuforiaAppSession = session;
         mActivity = activity;
+        queue = Volley.newRequestQueue(mActivity);
     }
 
 
@@ -71,10 +80,7 @@ public class CloudRecoRenderer implements GLSurfaceView.Renderer {
 
         // Call Vuforia function to (re)initialize rendering after first use
         // or after OpenGL ES context was lost (e.g. after onPause/onResume):
-//        change by QuocToan
-//        vuforiaAppSession.onSurfaceCreated();
-        Vuforia.onSurfaceCreated();
-
+        vuforiaAppSession.onSurfaceCreated();
     }
 
 
@@ -82,10 +88,7 @@ public class CloudRecoRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         // Call Vuforia function to handle render surface size changes:
-
-//        change by QuocToan
         vuforiaAppSession.onSurfaceChanged(width, height);
-        Vuforia.onSurfaceChanged(width, height);
     }
 
 
@@ -157,128 +160,70 @@ public class CloudRecoRenderer implements GLSurfaceView.Renderer {
         // Did we find any trackables this frame?
         if (state.getNumTrackableResults() > 0) {
             // Gets current trackable result
-            final TrackableResult trackableResult = state.getTrackableResult(0);
+            TrackableResult trackableResult = state.getTrackableResult(0);
+            String targetName = trackableResult.getTrackable().getName();
 
-            if (trackableResult == null) {
-                return;
-            }
-
-            //Case Extend tracking
-            String nameTargetNew = trackableResult.getTrackable().getName();
-            if (!nameTargetNew.equals(nameTarget)) {
-                nameTarget = nameTargetNew;
-                mActivity.stop();
-//                if (isplaying) {
-//                    th.interrupt();
+            if (!targetName.equals(mActivity.savedObject.getTargetName())) {
+                getTargetData(targetName, mActivity.museumID);
+//                if (trackableResult == null) {
+//                    return;
 //                }
-                th = new Thread(new Runnable() {
-                    public void run() {
-                        if (trackableResult.getTrackable().getName().equals("mapTarger")) {
-                            //play dap vo cay dan
-                            mActivity.play("http://org2.s1.mp3.zdn.vn/3ee282618c25657b3c34/7788044073809047899?key=C0Xu2kxeZolL0ieWy8C04Q&expires=1478226419&filename=Let%20Her%20Go%20-%20Passenger.mp3");
-                        } else {
-                            mActivity.play("http://s1mp3.cachehn42.vcdn.vn/67c933c394877dd92496/1665492474986419870?key=Ld1u8KsWCVD7Fk3QASOPyw&expires=1478226458&filename=Until%20You%20-%20Shayne%20Ward.mp3");
-                        }
 
-                    }
-                });
-                th.start();
 
-                mActivity.isplaying = true;
-            } else if (!mActivity.isplaying) {
-                mActivity.mediaPlayer.start();
-                mActivity.isplaying = true;
-            }
-
-            //caseNomal
-//            if (!isplaying) {
 //
-//                th = new Thread(new Runnable() {
-//                    public void run() {
-//                        if (trackableResult.getTrackable().getName().equals("mapTarger")) {
-//                            mActivity.play("http://org2.s1.mp3.zdn.vn/7003f4f9ffbd16e34fac/2322699312930851350?key=bkFr8dImwkngzHnDrCzQvA&expires=1477707723&filename=Dap%20Vo%20Cay%20Dan%20-%20Quang%20Le.mp3");
-//                        } else {
-//                            mActivity.play("http://org2.s1.mp3.zdn.vn/c4d8fe9b5cdfb581ecce/8552917280299845060?key=f3RPY4gmtwL5FawCviq97Q&expires=1477707786&filename=Nguoi%20Va%20Ta%20-%20Rhymastic%20Thanh%20Huyen.mp3");
+//            Log.d("QuocToanLog", imageTarget.getName());
+//            if (mActivity.isMusicPlaying == 0) {
+//
+//                //Case Extend tracking
+//
+//                if (!nameTargetNew.equals(nameTarget)) {
+//                    nameTarget = nameTargetNew;
+//                    mActivity.stop();
+////                if (isplaying) {
+////                    th.interrupt();
+////                }
+//                    th = new Thread(new Runnable() {
+//                        public void run() {
+//
+//                            mActivity.playNew("http://s1mp3.hot1.cache31.vcdn.vn/9b74df404504ac5af515/4402411033256464493?key=uZMKShPlJGhPA8FvxQ3OGA&expires=1480200257&filename=Ho%20Guom%20Sang%20Som%20-%20Hoang%20Hai.mp3");
+//
+//
 //                        }
+//                    });
+//                    th.start();
 //
-//                    }
-//                });
-//                th.start();
+//                    mActivity.isplaying = true;
+//                } else if (!mActivity.isplaying) {
+//                    mActivity.mediaPlayer.start();
+//                    mActivity.isplaying = true;
+//                }
 //
-//                isplaying = true;
+//            } else if (mActivity.isMusicPlaying == 1) {
+//                if (!nameTargetNew.equals(nameTarget)) {
+//                    nameTarget = nameTargetNew;
+//                } else {
+//                    Intent mPlayerHelperActivityIntent = new Intent(mActivity, FullscreenPlayback.class);
+//                    mPlayerHelperActivityIntent
+//                            .setAction(Intent.ACTION_VIEW);
+//                    mPlayerHelperActivityIntent.putExtra(
+//                            "shouldPlayImmediately", true);
+//                    mPlayerHelperActivityIntent.putExtra("currentSeekPosition",
+//                            0);
+//                    mPlayerHelperActivityIntent.putExtra("requestedOrientation",
+//                            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//                    mActivity.startActivityForResult(mPlayerHelperActivityIntent, 1);
+//                }
 //            }
 
-            Log.d("Found", trackableResult.getTrackable().getName());
-            mActivity.stopFinderIfStarted();
-
-            // Renders the Augmentation View with the 3D Book data Panel
-            //renderAugmentation(trackableResult);
-
-        } else
-
-        {
-            //mActivity.stop();
-//            if (isplaying) {
-//                th.interrupt();
-//            }
-//            isplaying = false;
-
+            }
+        } else {
+            isGettingData = false;
             mActivity.startFinderIfStopped();
         }
 
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
 
-        Renderer.getInstance().
-
-                end();
-
-    }
-
-
-    private void renderAugmentation(TrackableResult trackableResult) {
-        Matrix44F modelViewMatrix_Vuforia = Tool
-                .convertPose2GLMatrix(trackableResult.getPose());
-        float[] modelViewMatrix = modelViewMatrix_Vuforia.getData();
-
-        int textureIndex = 0;
-
-        // deal with the modelview and projection matrices
-        float[] modelViewProjection = new float[16];
-        Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f, OBJECT_SCALE_FLOAT);
-        Matrix.scaleM(modelViewMatrix, 0, OBJECT_SCALE_FLOAT,
-                OBJECT_SCALE_FLOAT, OBJECT_SCALE_FLOAT);
-        Matrix.multiplyMM(modelViewProjection, 0, vuforiaAppSession
-                .getProjectionMatrix().getData(), 0, modelViewMatrix, 0);
-
-        // activate the shader program and bind the vertex/normal/tex coords
-        GLES20.glUseProgram(shaderProgramID);
-        GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT, false,
-                0, mTeapot.getVertices());
-        GLES20.glVertexAttribPointer(textureCoordHandle, 2, GLES20.GL_FLOAT,
-                false, 0, mTeapot.getTexCoords());
-
-        GLES20.glEnableVertexAttribArray(vertexHandle);
-        GLES20.glEnableVertexAttribArray(textureCoordHandle);
-
-        // activate texture 0, bind it, and pass to shader
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
-                mTextures.get(textureIndex).mTextureID[0]);
-        GLES20.glUniform1i(texSampler2DHandle, 0);
-
-        // pass the model view matrix to the shader
-        GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
-                modelViewProjection, 0);
-
-        // finally draw the teapot
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, mTeapot.getNumObjectIndex(),
-                GLES20.GL_UNSIGNED_SHORT, mTeapot.getIndices());
-
-        // disable the enabled arrays
-        GLES20.glDisableVertexAttribArray(vertexHandle);
-        GLES20.glDisableVertexAttribArray(textureCoordHandle);
-
-        SampleUtils.checkGLError("CloudReco renderFrame");
+        Renderer.getInstance().end();
     }
 
 
@@ -286,4 +231,58 @@ public class CloudRecoRenderer implements GLSurfaceView.Renderer {
         mTextures = textures;
     }
 
+
+    public void getTargetData(final String targetName, int museumId) {
+        // Instantiate the RequestQueue.
+//        final RequestQueue queue = Volley.newRequestQueue(mActivity);
+        if (isGettingData) {
+            mActivity.stopFinderIfStarted();
+            return;
+        }
+        isGettingData = true;
+        String url = "http://friendlyguider.com/museum/index.php/main/server?getContent&museumid=" + museumId + "&targetname=" + targetName + "&format=json";
+        Log.d("stringRequest", url);
+        countRequest++;
+        Log.d("count", String.valueOf(countRequest));
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSONArray jsonArray = null;
+                        try {
+                            Log.d("jsonStringResponse", response);
+                            jsonArray = (new JSONObject(response)).getJSONArray("object");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            String audioLink = "http://friendlyguider.com/museum/" + jsonArray.getJSONObject(0).getString("audio");
+                            String videoLink = "http://friendlyguider.com/museum/" + jsonArray.getJSONObject(0).getString("video");
+                            setNewObjectData(new DataObject(targetName, audioLink, videoLink));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+//                        setNewObjectData(new DataObject(targetName, "http://s1mp3.hot1.cache31.vcdn.vn/9b74df404504ac5af515/4402411033256464493?key=uZMKShPlJGhPA8FvxQ3OGA&expires=1480200257&filename=Ho%20Guom%20Sang%20Som%20-%20Hoang%20Hai.mp3", ""));
+
+                        mActivity.stopFinderIfStarted();
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("AAAA", "Lỗi getJSONObjectFromURL" + error.getMessage());
+                queue.getCache().clear();
+            }
+
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+        queue.getSequenceNumber();
+    }
+
+    public void setNewObjectData(DataObject newObject) {
+
+        mActivity.savedObject = newObject;
+    }
 }

@@ -124,6 +124,12 @@
             android:launchMode="singleTask"
             android:theme="@style/SampleAppsTheme" >
         </activity>
+        <activity
+            android:name="com.vuforia.samples.VuforiaSamples.app.CloudRecognition.FullscreenPlayback"
+            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize"
+            android:launchMode="singleTask"
+            android:theme="@style/SampleAppsTheme" >
+        </activity>
     </application>
 
 </manifest>

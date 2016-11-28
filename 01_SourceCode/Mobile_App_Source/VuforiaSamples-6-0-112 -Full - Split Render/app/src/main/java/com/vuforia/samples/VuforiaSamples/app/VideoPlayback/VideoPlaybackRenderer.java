@@ -10,7 +10,6 @@ countries.
 package com.vuforia.samples.VuforiaSamples.app.VideoPlayback;
 
 import android.annotation.SuppressLint;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
@@ -199,7 +198,7 @@ public class VideoPlaybackRenderer implements GLSurfaceView.Renderer {
         for (int i = 0; i < VideoPlayback.NUM_TARGETS; i++) {
 
             if (mVideoPlayerHelper[i] != null) {
-                // The VideoPlayerHelper needs to setup a surface texture given
+                // The  needs to setup a surface texture given
                 // the texture id
                 // Here we inform the video player that we would like to play
                 // the movie
@@ -490,21 +489,25 @@ public class VideoPlaybackRenderer implements GLSurfaceView.Renderer {
             targetPositiveDimensions[i].setData(temp);
         }
 
-        if (state.getNumTrackableResults() > 0) {
-
-            Message msg = handlerButton.obtainMessage();
-            msg.arg1 = 1;
-            handlerButton.sendMessage(msg);
-        } else {
-            Message msg = handlerButton.obtainMessage();
-            msg.arg1 = 2;
-            handlerButton.sendMessage(msg);
-        }
+//        if (state.getNumTrackableResults() > 0) {
+//
+//            Message msg = handlerButton.obtainMessage();
+//            msg.arg1 = 1;
+//            handlerButton.sendMessage(msg);
+//        } else {
+//            Message msg = handlerButton.obtainMessage();
+//            msg.arg1 = 2;
+//            handlerButton.sendMessage(msg);
+//        }
         // Did we find any trackables this frame?
-        for (int tIdx = 0; tIdx < state.getNumTrackableResults(); tIdx++) {
+        if (state.getNumTrackableResults() > 0) {
             // Get the trackable:
-            final TrackableResult trackableResult = state.getTrackableResult(tIdx);
+            final TrackableResult trackableResult = state.getTrackableResult(0);
 
+            mActivity.stopFinderIfStarted();
+            if (trackableResult == null) {
+                return;
+            }
             ImageTarget imageTarget = (ImageTarget) trackableResult
                     .getTrackable();
 
@@ -525,7 +528,7 @@ public class VideoPlaybackRenderer implements GLSurfaceView.Renderer {
                     th = new Thread(new Runnable() {
                         public void run() {
 
-                                mActivity.play("http://org3.s1.mp3.zdn.vn/c4d8fe9b5cdfb581ecce/8552917280299845060?key=aqmpDDYwhOgvevr5e69A4A&expires=1478995674&filename=Nguoi%20Va%20Ta%20-%20Rhymastic%20Thanh%20Huyen.mp3");
+                            mActivity.play("http://org3.s1.mp3.zdn.vn/c4d8fe9b5cdfb581ecce/8552917280299845060?key=aqmpDDYwhOgvevr5e69A4A&expires=1478995674&filename=Nguoi%20Va%20Ta%20-%20Rhymastic%20Thanh%20Huyen.mp3");
 
 
                         }
@@ -830,6 +833,8 @@ public class VideoPlaybackRenderer implements GLSurfaceView.Renderer {
             SampleUtils.checkGLError("VideoPlayback renderFrame");
 
 
+        } else {
+            mActivity.startFinderIfStopped();
         }
 
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
