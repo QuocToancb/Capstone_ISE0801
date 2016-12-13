@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="gray">#575757</color>
+    <color name="light_gray">#D3D3D3</color>
+    <color name="overlay_bottom_bar_background">#1E1E1E</color>
+    <color name="overlay_bottom_bar_separators">#333333</color>
+    <color name="semi_transparent_black">#C8000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <dimen name="menu_activities_list_padding_left">24dp</dimen>
+    <dimen name="menu_activities_list_padding_top_down">14dp</dimen>
+    <dimen name="menu_entries_sides_padding">10dp</dimen>
+    <dimen name="menu_entries_text">20sp</dimen>
+    <dimen name="menu_entries_title">16sp</dimen>
+    <dimen name="menu_entries_top_down_padding">15dp</dimen>
+    <dimen name="menu_entries_top_down_radio_padding">7dp</dimen>
+    <dimen name="menu_title">22sp</dimen>
+    <dimen name="menu_title_padding">14dp</dimen>
+    <string name="INIT_ERROR">Lỗi khởi động</string>
+    <string name="INIT_ERROR_DEVICE_NOT_SUPPORTED">Lỗi khởi động Vuforia, thiết bị này không hỗ trợ dịch vụ. Xin cảm ơn!</string>
+    <string name="INIT_ERROR_NO_CAMERA_ACCESS">Lỗi kích hoạt camera, vui lòng thử lại sau</string>
+    <string name="INIT_LICENSE_ERROR_CANCELED_KEY">Mã kích hoạt không con được sử dụng, vui lòng kiểm tra lại</string>
+    <string name="INIT_LICENSE_ERROR_INVALID_KEY">Mã kích hoạt Vuforia không chính xác, vui lòng kiểm tra lại.</string>
+    <string name="INIT_LICENSE_ERROR_MISSING_KEY">Bạn chưa nhập mà kích hoạt Vuforia, xin vui lòng nhập mã trước khi sử dụng.</string>
+    <string name="INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT">Không thể kết nối đến internet, vui lòng kiểm tra lại kết nối!</string>
+    <string name="INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT">Không thể kết nối đến máy chủ Vuforia, xin vui lòng thử lại sau.  </string>
+    <string name="INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH">Mã kích hoạt Vuforia không chính xác, vui lòng kiểm tra lại.</string>
+    <string name="INIT_LICENSE_ERROR_UNKNOWN_ERROR">Lỗi trong quá trình khởi động Vuforia.</string>
+    <string name="UPDATE_ERROR_AUTHORIZATION_FAILED_DESC">The cloud recognition service access keys are incorrect or have expired.</string>
+    <string name="UPDATE_ERROR_AUTHORIZATION_FAILED_TITLE">Authorization Error</string>
+    <string name="UPDATE_ERROR_BAD_FRAME_QUALITY_DESC">The camera does not have enough detail, please try again later.</string>
+    <string name="UPDATE_ERROR_BAD_FRAME_QUALITY_TITLE">Poor Camera Image</string>
+    <string name="UPDATE_ERROR_NO_NETWORK_CONNECTION_DESC">Please check your internet connection and try again.</string>
+    <string name="UPDATE_ERROR_NO_NETWORK_CONNECTION_TITLE">Network Unavailable</string>
+    <string name="UPDATE_ERROR_PROJECT_SUSPENDED_DESC">The cloud recognition service has been suspended.</string>
+    <string name="UPDATE_ERROR_PROJECT_SUSPENDED_TITLE">Authorization Error</string>
+    <string name="UPDATE_ERROR_REQUEST_TIMEOUT_DESC">The network request has timed out, please check your internet connection and try again.</string>
+    <string name="UPDATE_ERROR_REQUEST_TIMEOUT_TITLE">Request Timeout</string>
+    <string name="UPDATE_ERROR_SERVICE_NOT_AVAILABLE_DESC">The service is unavailable, please try again later.</string>
+    <string name="UPDATE_ERROR_SERVICE_NOT_AVAILABLE_TITLE">Service Unavailable</string>
+    <string name="UPDATE_ERROR_TIMESTAMP_OUT_OF_RANGE_DESC">Please update the date and time and try again.</string>
+    <string name="UPDATE_ERROR_TIMESTAMP_OUT_OF_RANGE_TITLE">Clock Sync Error</string>
+    <string name="UPDATE_ERROR_UNKNOWN_DESC">The service is unavaiable, please try again later.</string>
+    <string name="UPDATE_ERROR_UNKNOWN_TITLE">Service Unavailable</string>
+    <string name="UPDATE_ERROR_UPDATE_SDK_DESC">The application is using an unsupported version of Vuforia.</string>
+    <string name="UPDATE_ERROR_UPDATE_SDK_TITLE">Unsupported Version</string>
+    <string name="app_description">Friendly guider Applications</string>
+    <string name="app_name">Friendly guider</string>
+    <string name="button_OK">OK</string>
+    <string name="museums_list_empty">Hệ thống đang xử lí</string>
+    <string name="museums_list_title_string">Xin vui lòng chọn bảo tàng đang tham quan</string>
+    <style name="SampleAppsTheme" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>
